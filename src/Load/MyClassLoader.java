@@ -7,6 +7,8 @@ import java.io.FileInputStream;
 
 public class MyClassLoader extends ClassLoader{
 	
+	public final static String filePathPre = "src/Load/";
+	
 	public final static String fileExtName = ".class";
 	
     public MyClassLoader(ClassLoader parent){
@@ -32,7 +34,7 @@ public class MyClassLoader extends ClassLoader{
     }
     
     private File getClassFile(String name){
-    	String fileName = String.format("%s%s%s","/",name,fileExtName);
+    	String fileName = String.format("%s%s%s",filePathPre,name,fileExtName);
         File file = new File(fileName);
         return file;
     }

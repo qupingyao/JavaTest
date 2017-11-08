@@ -16,6 +16,10 @@ public class Person {
         this.name = name;
     }
     
+    public void say(){
+    	System.out.println("I'm a boy");
+    }
+    
     public String getName(){
         return name;
     }
