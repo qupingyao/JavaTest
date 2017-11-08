@@ -3,10 +3,14 @@ package Load;
 public class Person {
 	
 	static{
-		System.out.println("static block");
+		System.out.println("person class static block");
 	}
+	
 	private String name;
-    
+	
+	public Person(){
+    	
+    }
     
     public Person(String name){
         this.name = name;

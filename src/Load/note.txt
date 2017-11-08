@@ -1,4 +1,4 @@
-jvm类加载机制(这里类没有特殊说明则代表类和接口，以下顺序为逻辑顺序，各阶段通常相互交叉。其中解析阶段逻辑上可能发生在初始化之后)
+jvm类加载机制(这里类没有特殊说明则代表类和接口，以下顺序为逻辑顺序，各阶段通常相互交叉，其中解析阶段逻辑上可能发生在初始化之后)
 1.装载:
  	1:通过类的全限定名来获取此类的二进制字节流。
     2:将这个字节流所代表的静态存储结构转化为方法区的运行时数据结构。
@@ -23,9 +23,55 @@ jvm类加载机制(这里类没有特殊说明则代表类和接口，以下顺�
 	2.调用类的静态方法
 	3.使用类的静态变量(非final修饰的，final修饰的在编译期间已被存储到本类的常量池中，和其他类没关系了)
 	4.某些反射方法如(Class.forName("my.xyz.Test"))
-	5.当初始化子类时父类必须先被初始化(接口初始化时其父接口不需要初始化,接口的实现类初始化时接口也不需要初始化)
+	5.当初始化子类时父类必须先被初始化(接口初始化时其父接口不需要初始化，接口的实现类初始化时接口也不需要初始化)
 	6.main()方法所在类
 	
 相关资料:1.http://www.cnblogs.com/szlbm/p/5504631.html
 	  2.http://blog.csdn.net/u011080472/article/details/51332866
 	  3.http://blog.csdn.net/luanlouis/article/details/50529868
+	  
+手动加载类的方法:
+	1.java.lang.Class.forName(String className,boolean initialize,ClassLoader loader);
+		initialize = true :对指定类进行装载链接初始化
+		initialize = false:对指定类进行装载，可能进行链接，但不去初始化
+		loader = null : 用启动类装载器去装载
+	2.java.lang.Class.forName(String className);
+		精简版forName <==>initialize = true && loader = 当前类的装载器
+	3.java.lang.ClassLoader.loadClass(String className,boolean resolve);
+		resolve = true  :用指定类装载器去装载链接指定类，但不去初始化
+		resolve = false :用指定类装载器去装载指定类，可能进行链接，但不去初始化
+    4.java.lang.ClassLoader.loadClass(String className);
+    	精简版loadClass <==>resolve = false
+    	
+双亲委派原则:启动类装载器<-扩展类装载器<-系统类装载器
+	protected Class<?> loadClass(String name, boolean resolve)throws ClassNotFoundException{
+        synchronized (getClassLoadingLock(name)) {
+            Class<?> c = findLoadedClass(name);/**判断本装载器是否装载了此类**/
+            if (c == null) {
+                long t0 = System.nanoTime();
+                try {
+                    if (parent != null) {/**有父装载器时递归调用父装载器的loadClass**/
+                        c = parent.loadClass(name, false);
+                    } else {/**如果本装载器是扩展类装载器,判断启动类装载器是否装载过此类**/
+                        c = findBootstrapClassOrNull(name);
+                    }
+                } catch (ClassNotFoundException e) {
+                    
+                }
+
+                if (c == null) {
+                    long t1 = System.nanoTime();
+                    c = findClass(name);/**本装载器自己装载此类**/
+                    sun.misc.PerfCounter.getParentDelegationTime().addTime(t1 - t0);
+                    sun.misc.PerfCounter.getFindClassTime().addElapsedTimeFrom(t1);
+                    sun.misc.PerfCounter.getFindClasses().increment();
+                }
+            }
+            if (resolve) {
+                resolveClass(c);
+            }
+            return c;
+        }
+    }
+    	
+    	

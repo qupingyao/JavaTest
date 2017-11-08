@@ -1,14 +1,13 @@
 package Load;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
-import java.nio.ByteBuffer;
-import java.nio.channels.Channels;
-import java.nio.channels.FileChannel;
-import java.nio.channels.WritableByteChannel;
 
 public class MyClassLoader extends ClassLoader{
+	
+	public final static String fileExtName = ".class";
 	
     public MyClassLoader(ClassLoader parent){
         super(parent);
@@ -19,38 +18,33 @@ public class MyClassLoader extends ClassLoader{
     }
     
     protected Class<?> findClass(String name) throws ClassNotFoundException{
-        File file = getClassFile(name);
+    	String fileNamePre = name.substring(name.lastIndexOf(".")+1);
+        File file = getClassFile(fileNamePre);
+        byte[] bytes = null;
         try{
-            byte[] bytes = getClassBytes(file);
-            Class<?> c = this.defineClass(name, bytes, 0, bytes.length);
-            return c;
+            bytes = getClassBytes(file);
         } 
         catch (Exception e){
             e.printStackTrace();
         }
-        return super.findClass(name);
+        Class<?> c = this.defineClass(name, bytes, 0, bytes.length);
+        return c;
     }
     
     private File getClassFile(String name){
-        File file = new File("D:/Person.class");
+    	String fileName = String.format("%s%s%s","/",name,fileExtName);
+        File file = new File(fileName);
         return file;
     }
     
     private byte[] getClassBytes(File file) throws Exception{
-        FileInputStream fis = new FileInputStream(file);
-        FileChannel fc = fis.getChannel();
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        WritableByteChannel wbc = Channels.newChannel(baos);
-        ByteBuffer by = ByteBuffer.allocate(1024);
-        while (true){
-            int i = fc.read(by);
-            if (i == 0 || i == -1)
-                break;
-            by.flip();
-            wbc.write(by);
-            by.clear();
-        }
-        fis.close();
-        return baos.toByteArray();
+    	int n = 0;  
+        BufferedInputStream br = new BufferedInputStream(new FileInputStream(file));  
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();  
+        while((n=br.read())!=-1){  
+            bos.write(n);  
+        }  
+        br.close();  
+        return bos.toByteArray();  
     }
 }
