@@ -7,18 +7,19 @@ import java.io.FileInputStream;
 
 public class MyClassLoader extends ClassLoader{
 	
-	public final static String filePathPre = "src/Load/";
+	private final static String filePathPre = "src/Load/";
 	
-	public final static String fileExtName = ".class";
+	private final static String fileExtName = ".class";
+	
+	public MyClassLoader(){
+    	
+    }
 	
     public MyClassLoader(ClassLoader parent){
         super(parent);
     }
     
-    public MyClassLoader(){
-    	
-    }
-    
+    @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException{
     	String fileNamePre = name.substring(name.lastIndexOf(".")+1);
         File file = getClassFile(fileNamePre);

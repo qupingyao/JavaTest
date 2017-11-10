@@ -13,6 +13,7 @@ public class ComplexLoad {
     public static int n = 99;
     
     public int j = print("j");
+    
     {
         print("construct block");
     }

@@ -3,7 +3,7 @@ package Load;
 public class A {
 	
 	static{
-		System.out.println("A class static block");
+		System.out.println("class A static block");
 	}
 	
 	private String name;

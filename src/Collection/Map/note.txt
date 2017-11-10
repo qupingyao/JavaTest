@@ -1,0 +1,15 @@
+hashCode()和equals()的作用:
+	equals():从业务逻辑上判断两个对象是否相等。
+	hashCode():仅仅用于某些特殊场合(如map,set)牺牲一定的准确性来快速获取一个对象的唯一标识(不应该出现equals()相等而hashCode()返回不相等的情况)。
+	              hashCode()相等      hashCode()不相等
+	equals()相等                      有                                     无
+	equals()不相等                  有                                     有
+	对于map而言有:
+	              hashCode()相等      hashCode()不相等
+	散列表同一位置                          有                                     有
+	散列表不同位置                          无                                     有
+	以此推出:
+	                                          散列表同一位置                散列表不同位置
+	equals()相等                      有                                      无
+	equals()不相等                  有                                      有
+		
