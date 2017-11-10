@@ -1,18 +1,18 @@
 package Load;
 
-public class Person {
+public class A {
 	
 	static{
-		System.out.println("person class static block");
+		System.out.println("A class static block");
 	}
 	
 	private String name;
 	
-	public Person(){
+	public A(){
     	
     }
     
-    public Person(String name){
+    public A(String name){
         this.name = name;
     }
     
