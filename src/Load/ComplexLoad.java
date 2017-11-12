@@ -1,5 +1,7 @@
 package Load;
-
+/**
+ * 一道阿里笔试题
+ */
 public class ComplexLoad {
 	
     public static int k = 0;
