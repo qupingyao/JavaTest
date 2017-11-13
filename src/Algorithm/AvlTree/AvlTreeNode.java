@@ -1,21 +1,15 @@
 package Algorithm.AvlTree;
 
-import java.awt.SecondaryLoop;
-import java.awt.event.MouseWheelEvent;
-import java.io.PrintWriter;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import javax.imageio.spi.IIOServiceProvider;
-
-import org.omg.CORBA.PRIVATE_MEMBER;
+import javax.swing.tree.TreeNode;
 
 public class AvlTreeNode{
 	
 	private int val;
 	
-	private int level;
+	private int level = 1;
 	
 	private AvlTreeNode left;
 	
@@ -25,25 +19,92 @@ public class AvlTreeNode{
 		this.val = val;
 	}
 	
-	public static void addNode(AvlTreeNode node,int key){
-		if(node!=null){
-			if(node.val<key){
-				addNode(node.right, key);
-			}else if(node.val>key){
-				addNode(node.left, key);
+	public void addNode(int key){
+		AvlTreeNode waitAddNode = null;
+		if(val<key){
+			if(right!=null){
+				waitAddNode = right;
+				waitAddNode.addNode(key);
+			}else{
+				waitAddNode = new AvlTreeNode(key);
+				right = waitAddNode;
 			}
-		}else{
-			node = new AvlTreeNode(key);
+		}else if(val>key){
+			if(left!=null){
+				waitAddNode = left;
+				waitAddNode.addNode(key);
+			}else{
+				waitAddNode = new AvlTreeNode(key);
+				left = waitAddNode;
+			}
 		}
-		node.level = calLevel(node);
+		level = this.calLevel();
 	}
 	
-	private static int calLevel(AvlTreeNode node){
-		if(node!=null){
-			return Math.max(calLevel(node.left), calLevel(node.right))+1;
-		}else{
-			return 0;
-		}
+	/*****************************************************************************
+	 * ll旋转:a为e子树添加新节点后最小不平衡子树
+	 * 	     a(h+2)                                          b(h+2)
+	 * 	    /       \         d子树添加新节点后                                                   /           \
+	 * 	  b(h+1)    c(h) -------------------------->  d(h+1)          a(h+1)  
+	 *    /	 \        			(h>=1)			        /	 \          /  \
+	 *  d(h)  e(h)					                f(h-1/h) g(h-1/h) e(h) c(h)
+	 *   /  \									   
+	 *f(h-1) g(h-1)
+	 *****************************************************************************/
+	private void llRotate(){
+	}
+	
+	/*****************************************************************************
+	 * lr旋转:a为d子树添加新节点后最小不平衡子树
+	 * 	    a(h+2)                                        e(h+2)
+	 * 	   /     \         e子树添加新节点后                                                /           \
+	 * 	 b(h+1)   c(h) -------------------------->  b(h+1)         a(h+1)  
+	 *   /   \			(h>=1)			            /    \         /	 \
+	 * d(h)  e(h)					              d(h)  f(h-1/h) g(h-1/h) c(h)
+	 * 	    /   \									   
+	 *    f(h-1) g(h-1)
+	 *****************************************************************************/
+	private void lrRotate(){
+	}
+	
+	/*****************************************************************************
+	 * rl旋转:a为d子树添加新节点后最小不平衡子树
+	 * 	    a(h+2)                                        d(h+2)
+	 * 	   /     \         d子树添加新节点后                                                /            \
+	 * 	 b(h)   c(h+1) -------------------------->  a(h+1)         c(h+1)  
+	 *  	     /  \			(h>=1)			   /    \         /	    \
+	 * 		   d(h) e(h)					    b(h)  f(h-1/h) g(h-1/h) e(h)
+	 * 		  /   \									   
+	 *    f(h-1) g(h-1)
+	 *****************************************************************************/
+	private void rlRotate(){
+		AvlTreeNode oldRootNode  = this;
+		AvlTreeNode rootNode = oldRootNode.right.left;
+		oldRootNode.right = rootNode.left;
+		oldRootNode.right.left = rootNode.right;
+		rootNode.left = oldRootNode;
+		rootNode.right = oldRootNode.right;
+		oldRootNode = rootNode;
+	}
+	
+	/*****************************************************************************
+	 * rr旋转:a为e子树添加新节点后最小不平衡子树
+	 * 	     a(h+2)                                          c(h+2)
+	 * 	   /       \         e子树添加新节点后                                                   /           \
+	 * 	 b(h)      c(h+1) -------------------------->  a(h+1)       e(h+1)  
+	 *  	      /     \			(h>=1)			   /	\        /	 \
+	 * 		    d(h)    e(h)					     b(h) d(/h) f(h-1/h) g(h-1/h)
+	 * 		           /  \									   
+	 *             f(h-1) g(h-1)
+	 *****************************************************************************/
+	private void rrRotate(){
+	}
+	   
+	
+	private int calLevel(){
+		int leftLevel = (left==null)? 0:left.calLevel();
+		int rightLevel = (right==null)? 0:right.calLevel();
+		return Math.max(leftLevel, rightLevel)+1;
 	}
 
 	public int getVal() {
@@ -54,40 +115,53 @@ public class AvlTreeNode{
 		this.val = val;
 	}
 	
-	public void print(){
-		int num = (int)Math.pow(2,level)-1;
+	@Override
+	public String toString(){
+		StringBuffer buffer = new StringBuffer();
+		int nodeNum = (int)Math.pow(2,level)-1;
 		Queue<AvlTreeNode> queue = new LinkedList<AvlTreeNode>();
 		queue.add(this);
-		int i = 0;
-		while(i<num){
+		for(int i=0,height=1;i<nodeNum;i++){
 			AvlTreeNode avlTreeNode = queue.poll();
 			if(avlTreeNode!=null){
-				System.out.println(avlTreeNode.val);
+				buffer.append(String.format("%-5d",avlTreeNode.val));
 				queue.add(avlTreeNode.left);
 				queue.add(avlTreeNode.right);
-				i = i+2;
 			}else{
-				System.out.println(avlTreeNode.val);
+				buffer.append(String.format("%-5s","null"));
 				queue.add(null);
 				queue.add(null);
-				i = i+2;
+			}
+			if(i == ((int)Math.pow(2,height)-2)){
+				height++;
+				buffer.append("\n");
 			}
 		}
-		
-	}
-	
-	public static void main(String[] args) {
-		
-		Queue<String> queue = new LinkedList<String>();
-		queue.add(null);
-		queue.add("111");
-		queue.add(null);
-		queue.add("222");
-		System.out.println(queue.size());
-		for(Iterator iter = queue.iterator(); iter.hasNext();) {
-			System.out.println(iter.next());
-		}
+		return buffer.toString();
 	}
 
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	public AvlTreeNode getLeft() {
+		return left;
+	}
+
+	public void setLeft(AvlTreeNode left) {
+		this.left = left;
+	}
+
+	public AvlTreeNode getRight() {
+		return right;
+	}
+
+	public void setRight(AvlTreeNode right) {
+		this.right = right;
+	}
 	
 }

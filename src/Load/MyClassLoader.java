@@ -22,10 +22,10 @@ public class MyClassLoader extends ClassLoader{
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException{
     	String fileNamePre = name.substring(name.lastIndexOf(".")+1);
-        File file = getClassFile(fileNamePre);
+        File file = this.getClassFile(fileNamePre);
         byte[] bytes = null;
         try{
-            bytes = getClassBytes(file);
+            bytes = this.getClassBytes(file);
         } 
         catch (Exception e){
             e.printStackTrace();
