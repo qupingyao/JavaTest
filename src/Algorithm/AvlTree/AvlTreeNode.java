@@ -42,64 +42,64 @@ public class AvlTreeNode{
 	}
 	
 	/*****************************************************************************
-	 * ll旋转:a为e子树添加新节点后最小不平衡子树
-	 * 	     a(h+2)                                          b(h+2)
-	 * 	    /       \         d子树添加新节点后                                                   /           \
-	 * 	  b(h+1)    c(h) -------------------------->  d(h+1)          a(h+1)  
-	 *    /	 \        			(h>=1)			        /	 \          /  \
-	 *  d(h)  e(h)					                f(h-1/h) g(h-1/h) e(h) c(h)
-	 *   /  \									   
-	 *f(h-1) g(h-1)
+	 * ll旋转:a为d子树添加新节点后最小不平衡子树
+	 * 	    a(h+2)                     a(h+3)           		 b(h+2)
+	 * 	   /    \     d子树添加新节点后              /    \     llRotate()     /    \                       		 /    \
+	 * 	 b(h+1) c(h) -------------> b(h+2) c(h) ------------> d(h+1) a(h+1)  
+	 *   /	 \        (h>=0)		/	 \			           		 /   \         
+	 * d(h)  e(h)				 d(h+1) e(h)                 	   e(h)  c(h)
 	 *****************************************************************************/
 	private void llRotate(){
+		AvlTreeNode newRootNode = this.left;
+		this.left = newRootNode.right;
+		newRootNode.right = this;
 	}
 	
 	/*****************************************************************************
-	 * lr旋转:a为d子树添加新节点后最小不平衡子树
-	 * 	    a(h+2)                                        e(h+2)
-	 * 	   /     \         e子树添加新节点后                                                /           \
-	 * 	 b(h+1)   c(h) -------------------------->  b(h+1)         a(h+1)  
-	 *   /   \			(h>=1)			            /    \         /	 \
-	 * d(h)  e(h)					              d(h)  f(h-1/h) g(h-1/h) c(h)
-	 * 	    /   \									   
-	 *    f(h-1) g(h-1)
+	 * lr旋转:a为e子树添加新节点后最小不平衡子树
+	 * 	    a(h+2)                     a(h+3)                     e(h+2)
+	 * 	   /    \     e子树添加新节点后               /    \     lrRotate()     /       \
+	 * 	 b(h+1) c(h) -------------> b(h+2) c(h) ------------> b(h+1)     a(h+1)
+	 *   /   \		  (h>=0)         /  \			          /  \       /  \
+	 * d(h)  e(h)	               d(h) e(h+1)			    d(h) e左子树  e右子树    c(h)
 	 *****************************************************************************/
 	private void lrRotate(){
+		AvlTreeNode newRootNode = this.left.right;
+		this.left.right = newRootNode.left;
+		newRootNode.left = this.left;
+		this.left = newRootNode.right;
+		newRootNode.right = this;
 	}
 	
 	/*****************************************************************************
 	 * rl旋转:a为d子树添加新节点后最小不平衡子树
-	 * 	    a(h+2)                                        d(h+2)
-	 * 	   /     \         d子树添加新节点后                                                /            \
-	 * 	 b(h)   c(h+1) -------------------------->  a(h+1)         c(h+1)  
-	 *  	     /  \			(h>=1)			   /    \         /	    \
-	 * 		   d(h) e(h)					    b(h)  f(h-1/h) g(h-1/h) e(h)
-	 * 		  /   \									   
-	 *    f(h-1) g(h-1)
+	 * 	  a(h+2)                      a(h+3)                      d(h+2)
+	 * 	 /    \       d子树添加新节点后           /   \       rlRotate()     /       \ 
+	 * b(h)  c(h+1)  -------------> b(h) c(h+2) ------------> a(h+1)     c(h+1)  
+	 *  	  /  \	  (h>=0)		     /  \	              /   \      /  \
+	 * 		d(h) e(h)				 d(h+1) e(h)            b(h) d左子树 d右子树   e(h)
 	 *****************************************************************************/
 	private void rlRotate(){
-		AvlTreeNode oldRootNode  = this;
-		AvlTreeNode rootNode = oldRootNode.right.left;
-		oldRootNode.right = rootNode.left;
-		oldRootNode.right.left = rootNode.right;
-		rootNode.left = oldRootNode;
-		rootNode.right = oldRootNode.right;
-		oldRootNode = rootNode;
+		AvlTreeNode newRootNode = this.right.left;
+		this.right.left = newRootNode.right;
+		newRootNode.right = this.right;
+		this.right = newRootNode.left;
+		newRootNode.left = this;
 	}
 	
 	/*****************************************************************************
 	 * rr旋转:a为e子树添加新节点后最小不平衡子树
-	 * 	     a(h+2)                                          c(h+2)
-	 * 	   /       \         e子树添加新节点后                                                   /           \
-	 * 	 b(h)      c(h+1) -------------------------->  a(h+1)       e(h+1)  
-	 *  	      /     \			(h>=1)			   /	\        /	 \
-	 * 		    d(h)    e(h)					     b(h) d(/h) f(h-1/h) g(h-1/h)
-	 * 		           /  \									   
-	 *             f(h-1) g(h-1)
+	 * 	  a(h+2)                       a(h+3)                     c(h+2)
+	 * 	 /    \       e子树添加新节点后              /  \       rrRotate()      /     \
+	 * b(h)  c(h+1)  -------------> b(h) c(h+2) ------------>  a(h+1) e(h+1)  
+	 *       /   \	  (h>=0)			 /	\                  /   \
+	 * 	   d(h)  e(h)                  d(h) e(h+1)			b(h)   d(h)
 	 *****************************************************************************/
 	private void rrRotate(){
+		AvlTreeNode newRootNode = this.right;
+		this.right = newRootNode.right;
+		newRootNode.left = this;
 	}
-	   
 	
 	private int calLevel(){
 		int leftLevel = (left==null)? 0:left.calLevel();
