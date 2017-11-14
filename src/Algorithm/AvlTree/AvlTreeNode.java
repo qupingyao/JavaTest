@@ -19,26 +19,39 @@ public class AvlTreeNode{
 		this.val = val;
 	}
 	
-	public void addNode(int key){
+	public AvlTreeNode addNode(int key){
 		AvlTreeNode waitAddNode = null;
 		if(val<key){
 			if(right!=null){
-				waitAddNode = right;
-				waitAddNode.addNode(key);
+				right = right.addNode(key);
+				if(this.calUnbalanceRate()<=-2){
+					if(this.right.calUnbalanceRate()<0){
+						this.rrRotate();
+					}else if(this.right.calUnbalanceRate()>0){
+						this.rlRotate();
+					}
+				}
 			}else{
 				waitAddNode = new AvlTreeNode(key);
 				right = waitAddNode;
 			}
 		}else if(val>key){
 			if(left!=null){
-				waitAddNode = left;
-				waitAddNode.addNode(key);
+				left = left.addNode(key);
+				if(this.calUnbalanceRate()>=2){
+					if(this.left.calUnbalanceRate()>0){
+						left = this.llRotate();
+					}else if(this.left.calUnbalanceRate()<0){
+						left = this.lrRotate();
+					}
+				}
 			}else{
 				waitAddNode = new AvlTreeNode(key);
 				left = waitAddNode;
 			}
 		}
 		level = this.calLevel();
+		return this;
 	}
 	
 	/*****************************************************************************
@@ -49,10 +62,11 @@ public class AvlTreeNode{
 	 *   /	 \        (h>=0)		/	 \			           		 /   \         
 	 * d(h)  e(h)				 d(h+1) e(h)                 	   e(h)  c(h)
 	 *****************************************************************************/
-	private void llRotate(){
+	private AvlTreeNode llRotate(){
 		AvlTreeNode newRootNode = this.left;
 		this.left = newRootNode.right;
 		newRootNode.right = this;
+		return newRootNode;
 	}
 	
 	/*****************************************************************************
@@ -63,12 +77,13 @@ public class AvlTreeNode{
 	 *   /   \		  (h>=0)         /  \			          /  \       /  \
 	 * d(h)  e(h)	               d(h) e(h+1)			    d(h) e左子树  e右子树    c(h)
 	 *****************************************************************************/
-	private void lrRotate(){
+	private AvlTreeNode lrRotate(){
 		AvlTreeNode newRootNode = this.left.right;
 		this.left.right = newRootNode.left;
 		newRootNode.left = this.left;
 		this.left = newRootNode.right;
 		newRootNode.right = this;
+		return newRootNode;
 	}
 	
 	/*****************************************************************************
@@ -79,12 +94,13 @@ public class AvlTreeNode{
 	 *  	  /  \	  (h>=0)		     /  \	              /   \      /  \
 	 * 		d(h) e(h)				 d(h+1) e(h)            b(h) d左子树 d右子树   e(h)
 	 *****************************************************************************/
-	private void rlRotate(){
+	private AvlTreeNode rlRotate(){
 		AvlTreeNode newRootNode = this.right.left;
 		this.right.left = newRootNode.right;
 		newRootNode.right = this.right;
 		this.right = newRootNode.left;
 		newRootNode.left = this;
+		return newRootNode;
 	}
 	
 	/*****************************************************************************
@@ -95,16 +111,23 @@ public class AvlTreeNode{
 	 *       /   \	  (h>=0)			 /	\                  /   \
 	 * 	   d(h)  e(h)                  d(h) e(h+1)			b(h)   d(h)
 	 *****************************************************************************/
-	private void rrRotate(){
+	private AvlTreeNode rrRotate(){
 		AvlTreeNode newRootNode = this.right;
 		this.right = newRootNode.right;
 		newRootNode.left = this;
+		return newRootNode;
 	}
 	
 	private int calLevel(){
 		int leftLevel = (left==null)? 0:left.calLevel();
 		int rightLevel = (right==null)? 0:right.calLevel();
 		return Math.max(leftLevel, rightLevel)+1;
+	}
+	
+	private int calUnbalanceRate(){
+		int leftLevel = (left==null)? 0:left.calLevel();
+		int rightLevel = (right==null)? 0:right.calLevel();
+		return Math.abs(leftLevel-rightLevel);
 	}
 
 	public int getVal() {
