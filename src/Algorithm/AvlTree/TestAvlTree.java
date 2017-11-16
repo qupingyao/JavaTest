@@ -1,4 +1,4 @@
-package Algorithm.AvlTree;
+/*package Algorithm.AvlTree;
 
 
 public class TestAvlTree{
@@ -12,7 +12,7 @@ public class TestAvlTree{
 			System.out.println(avlTreeNode);
 		}
 		System.out.println(avlTreeNode);
-		int[] dArray = {37,20,35,15,40,50,30,0,1,5,3,4,10,7,8};
+		int[] dArray = {20,35,15,0,3,8,5,50,40,7,4,2,10,30};
 		for(int i=0;i<dArray.length;i++){
 			avlTreeNode = avlTreeNode.removeNode(dArray[i]);
 			System.out.format("after remove %d:\n",dArray[i]);
@@ -21,4 +21,4 @@ public class TestAvlTree{
 	}
 
 	
-}
+}*/

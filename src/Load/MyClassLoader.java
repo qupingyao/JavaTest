@@ -21,7 +21,7 @@ public class MyClassLoader extends ClassLoader{
     
     @Override
     protected Class<?> findClass(String name) throws ClassNotFoundException{
-    	String fileNamePre = name.substring(name.lastIndexOf(".")+1);
+    	String fileNamePre = name.substring(name.lastIndexOf(".") + 1);
         File file = this.getClassFile(fileNamePre);
         byte[] bytes = null;
         try{
@@ -35,7 +35,7 @@ public class MyClassLoader extends ClassLoader{
     }
     
     private File getClassFile(String name){
-    	String fileName = String.format("%s%s%s",filePathPre,name,fileExtName);
+		String fileName = String.format("%s%s%s", filePathPre, name, fileExtName);
         File file = new File(fileName);
         return file;
     }
@@ -44,7 +44,7 @@ public class MyClassLoader extends ClassLoader{
     	int n = 0;  
         BufferedInputStream br = new BufferedInputStream(new FileInputStream(file));  
         ByteArrayOutputStream bos = new ByteArrayOutputStream();  
-        while((n=br.read())!=-1){  
+        while((n = br.read()) != -1){  
             bos.write(n);  
         }  
         br.close();  
