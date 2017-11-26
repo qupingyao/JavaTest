@@ -4,32 +4,18 @@ public class RbTreeNode{
 	
 	private int val;
 	
+	private int level = 1;
+	
 	private RbTreeNode left;
 	
 	private RbTreeNode right;
-
-	public int getVal() {
-		return val;
-	}
-
-	public void setVal(int val) {
+	
+	private RbTreeNode parent;
+	
+	public RbTreeNode(int val,RbTreeNode parent){
 		this.val = val;
 	}
-
-	public RbTreeNode getLeft() {
-		return left;
-	}
-
-	public void setLeft(RbTreeNode left) {
-		this.left = left;
-	}
-
-	public RbTreeNode getRight() {
-		return right;
-	}
-
-	public void setRight(RbTreeNode right) {
-		this.right = right;
-	}
+	
+	
 	
 }
