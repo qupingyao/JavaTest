@@ -12,4 +12,9 @@ hashCode()和equals()的作用:
 	                                          散列表同一位置                散列表不同位置
 	equals()相等                      有                                      无
 	equals()不相等                  有                                      有
+	
+相关资料:
+	1.http://www.importnew.com/20386.html
+	2.https://www.programcreek.com/2013/09/top-9-questions-for-java-map
+	3.http://www.cnblogs.com/skywang12345/p/3310887.html
 		
