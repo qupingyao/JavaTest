@@ -12,7 +12,7 @@ public class MyClassLoader extends ClassLoader {
 	private final static String fileExtName = ".class";
 
 	public MyClassLoader() {
-
+		super();
 	}
 
 	public MyClassLoader(ClassLoader parent) {

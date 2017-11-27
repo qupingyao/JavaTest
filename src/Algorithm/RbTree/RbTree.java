@@ -167,9 +167,9 @@ public class RbTree {
 					if(uncleNode==null || uncleNode.color==black){
 						if(parent.isLeftSon()){
 							if(this.isLeftSon()){
-								grandparentNode = grandparentNode.llRotate();
+								grandparentNode.llRotate();
 							}else{
-								grandparentNode = grandparentNode.lrRotate();
+								grandparentNode.lrRotate();
 							}
 						}else{
 							if(this.isLeftSon()){
@@ -228,22 +228,39 @@ public class RbTree {
 			}
 			return null;
 		}
-
-		/**
-		 * ll调整
-		 */
-		private RbTreeNode llRotate() {
+//    new       old
+//		\       |
+// 		 \    c(黑)				        b(黑)
+//	      \ /	   \			     /       \
+//	      b(红)    d(黑)             a(红)     c(红)
+//	     /  \     /   \            /  \      /   \
+//    a(红) k+1黑  k黑        k黑                      k+1黑     k+1黑   k+1黑    d(黑)
+//	 /  \                                       /  \
+//k+1黑     k+1黑                     				               k黑        k黑          
+		private void llRotate() {
 			System.out.println("llRotate");
 			RbTreeNode newRootNode = left;
+			RbTreeNode oldParentNode = parent;
 			left = newRootNode.right;
 			if(left!=null){
 				left.parent = this;
 			}
 			newRootNode.right = this;
+			newRootNode.parent = oldParentNode;
+			if(oldParentNode!=null){
+				if(this.isLeftSon()){
+					parent.left = newRootNode;
+				}
+				if(this.isRightSon()){
+					parent.right = newRootNode;
+				}
+			}else{
+				System.out.println("###");
+				root = newRootNode;
+			}
 			parent = newRootNode;
 			newRootNode.color = black;
 			color = red;
-			return newRootNode;
 		}
 
 		/**
