@@ -17,4 +17,9 @@ hashCode()和equals()的作用:
 	1.http://www.importnew.com/20386.html
 	2.https://www.programcreek.com/2013/09/top-9-questions-for-java-map
 	3.http://www.cnblogs.com/skywang12345/p/3310887.html
+	4.http://blog.csdn.net/fan2012huan/article/details/51094454
+	
+HashMap的扩容桶树化机制:
+	capacity:hashmap键值对容量
+	factor:承载因子
 		

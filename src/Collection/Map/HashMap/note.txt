@@ -1,0 +1,69 @@
+hashCode()和equals()的作用:
+	equals():从业务逻辑上判断两个对象是否相等
+	hashCode():仅仅用于某些特殊场合(如map,set)牺牲一定的准确性来快速获取一个对象的唯一标识(不应该出现equals()相等而hashCode()返回不相等的情况)
+	              hashCode()相等      hashCode()不相等
+	equals()相等                      有                                     无
+	equals()不相等                  有                                     有
+	对于hashmap而言有:
+	              hashCode()相等      hashCode()不相等
+	散列表同一位置                          有                                     有
+	散列表不同位置                          无                                     有
+	以此推出:
+	                                          散列表同一位置                散列表不同位置
+	equals()相等                      有                                      无
+	equals()不相等                  有                                      有
+	
+相关资料:
+	1.http://www.importnew.com/20386.html
+	2.https://www.programcreek.com/2013/09/top-9-questions-for-java-map
+	3.http://www.cnblogs.com/skywang12345/p/3310887.html
+	4.http://blog.csdn.net/fan2012huan/article/details/51094454
+	
+HashMap的扩容桶树化机制:
+	capacity:hashmap键值对容量
+	factor:承载因子
+
+HashMap:
+	内置一个桶数组(每个数组元素为一个键值对)，元素冲突后同一桶内的所有键值对形成链表或者红黑树(jdk1.8)
+	capacity:桶数组的大小，2的整数次幂，默认为16，最大为1<<30(int最大为(1<<31)-1))
+	threshold:当整个hashmap内元素个数达到threshold时触发扩容机制（当capacity过小时即使不达到threshold也会触发扩容机制）
+		                 一般记加载因子loadFactor = threshold/capacity 保持在一定恒定的值，默认为0.75(时间与空间的一个平衡)，可以大于1
+		static final int hash(Object key) {
+        int h;
+        return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);/**hashCode异或右移16后的自己
+    }
+	 桶数组的大小设计和hash()方法设计最大程度上减少元素冲突，提高hashmap性能
+	1):添加元素逻辑:
+	    1:如果桶数组为空，先触发扩容机制
+	    2:将添加的key调用hash()方法后(下面统称hashkey)用求余的方法确定键值对放在哪个目标桶里面(由于桶数组大小是2的整数次幂，只需要简单位运算即可)
+	          1):如果目标桶内为空，直接放
+	          2):目标桶内非空，用key的equals()方法判断是否有重复的key
+	          		1):如果有重复key就直接覆盖value
+	          		2):如果没有重复key
+	          			1):目标桶是一个红黑树指针,直接往红黑树内放(红黑树内用hashkey作为排序的指标，有可能出现hashkey相同的两节点，此时用comparabe,key的内存地址作为排序标准)
+	          			2):目标桶是一个链表指针,直接放到链表尾部,判断当前链表长度是否超过8,超过则触发目标桶的树化机制上
+	    3:判断当前hashmap内元素是否达到threshold,达到就触发扩容机制	
+	2):删除元素逻辑:
+	    1:将删除的key调用hash()方法后(下面统称hashkey)用求余的方法确定待删除键值对放在哪个目标桶里面(由于桶数组大小是2的整数次幂，只需要简单位运算即可)
+	          1):如果目标桶不为空而且用key的equals()方法判断出存在此key,则删除此键值对(此时如果是对红黑树进行删除即使节点数太少也不会触发目标桶链化机制)
+	3):扩容机制:
+		1:调整hashmap的capacity和threshold
+			1):如果桶数组为空，默认配置capacity=16， threshold=12，	
+			2):如果capacity已达最大值，设置threshold为int最大值
+			3):capacity和threshold同时翻一倍
+		2:如果调整前桶数组不为空，对数组内每一键值对，由于扩容倍数为2，设原位置下标为a，原桶数组大小为capacity，扩容后所在下标只可能为a或者a+capacity，
+		  这两种情况用(hashkey & oldCap) == 0即可判断区分
+		 对于每一个桶:
+		 	1)当前桶是一个链表指针,依次判断链表每一个节点从而生成两个子链表放入新的桶数组
+		 	2)当前桶是一个红黑树指针,对红黑树的每一个节点生成两个子树如新的桶数组，如果子树节点数不超过6则触发目标桶的链化机制
+	4):树化机制:
+		判断桶数组的大小
+			1):桶数组大小小于64,触发桶数组的扩容机制
+			2):用红黑树算法将当前桶的链表转化为红黑树 
+	5):链化机制:
+		直接将当前桶的红黑树转化为链表
+		
+	replace()方法不触发modCount改变
+          
+	
+		
