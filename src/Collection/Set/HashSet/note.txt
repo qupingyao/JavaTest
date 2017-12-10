@@ -1,0 +1,4 @@
+hashset原理:
+	内部实现为hashmap，其中hashmap每个键值对的key为hashset元素，value为一个公共的hashset内置Object对象
+	由于实现是hashmap，因此为了性能考虑hashset元素最好实现comparable接口
+		
