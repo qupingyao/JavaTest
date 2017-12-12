@@ -21,8 +21,8 @@ hashCode()和equals()的区别:
 hashmap原理:
 	内置一个桶数组，同一桶内的所有键值对(hash冲突)形成链表或者红黑树(jdk1.8新增)
 	capacity:桶数组的大小，2的整数次幂，默认为16，最大为1<<30(int最大为(1<<31)-1)
-	threshold:当整个hashmap内键值对个数达到threshold时触发扩容机制(当capacity过小时键值对个数即使不达到threshold也会触发扩容机制)
-		                  一般记负载因子loadFactor = threshold/capacity 保持在一定恒定的值，默认为0.75(hashamp时间与空间的一个平衡)，可以大于1
+	threshold:当整个hashmap内键值对个数达到threshold时触发扩容机制(当capacity过小时键值对个数即使不达到threshold也会触发扩容机制)，最大为Integer.MAX_VALUE，
+		                  一般记负载因子loadFactor = threshold/capacity 保持在一个恒定的值，默认为0.75(hashmap时间与空间的一个平衡)，可以大于1
 	static final int hash(Object key) {
         int h;
         return (key == null) ? 0 : (h = key.hashCode()) ^ (h >>> 16);/**hashCode异或右移16后的自己**/
@@ -40,18 +40,18 @@ hashmap原理:
 	          			2):目标桶内所有键值对形成链表，直接放到链表尾部，判断目标桶当前链表长度是否>=8，是则触发目标桶的树化机制
 	    3:判断当前hashmap内键值对个数是否达到threshold，达到就触发扩容机制	
 	2):删除元素逻辑:
-	    1:将删除的key调用hash()方法后(下面统称hashkey)用求余的方法确定待删除键值对放在哪个目标桶里(由于桶数组大小是2的整数次幂，只需要简单位运算即可)
+	    1:将删除的key调用hash()方法后的值(下面统称hashkey)用求余的方法确定待删除键值对放在哪个目标桶里(由于桶数组大小是2的整数次幂，只需要简单位运算即可)
 	          1):如果目标桶不为空而且目标桶内所有键值对形成红黑树，用key的equals()方法判断出是否存在此key(由于红黑树节点中hashkey可能相等，有些情况下寻找某个节点需要同时遍历左子树和右子树，效率低下，因此hashmap的key对象最好实现comparable接口)，
 	          		       存在则删除该键值对(此时即使红黑树节点数太少也不会触发目标桶的链化机制)
 			  2):如果目标桶不为空而且目标桶内所有键值对形成链表，用key的equals()方法判断出是否存在此key，存在则删除该键值对
 	3):扩容机制:
-		1:调整hashmap的capacity和threshold
-			  1):如果桶数组为空，默认配置capacity=16， threshold=12	
-			  2):如果桶数组非空，如果capacity已达最大值，设置threshold为int最大值
-			  3):如果桶数组非空，如果capacity未达最大值，capacity和threshold同时翻一倍
-		2:如果扩容前桶数组不为空，对每一个桶内的所有键值对进行移位处理(对hashmap内每一个键值对，由于扩容倍数为2，设原来所在桶下标为a，原桶数组大小为oldCap，扩容后所在桶下标只可能为a或者a+oldCap
-		      这两种情况用(hashkey & oldCap) == 0 即可判断区分):
-		      对于每一个桶:
+		1:计算扩容后桶数组的capacity和threshold
+			  1):如果旧桶数组为空，默认配置capacity=16， threshold=12	
+			  2):如果旧桶数组非空，如果oldCapacity已达最大值，capacity=最大值，设置threshold为int最大值
+			  3):如果旧桶数组非空，如果oldCapacity未达最大值，capacity=2*oldCapacity，threshold=2*oldThreshold
+		2:按照新计算的capacity值新建新的桶数组，如果旧桶数组不为空，对旧桶数组内每一个桶内的所有键值对进行移位处理(对hashmap内每一个键值对，由于扩容倍数为2，设原来所在桶数组下标为a，原桶数组大小为oldCapacity，扩容后所在桶数组下标只可能为a或者a+oldCapacity
+		      这两种情况用(hashkey & oldCapacity) == 0 即可判断区分)
+		      对于旧桶数组内每一个桶:
 		 	  1):当前桶内所有键值对形成链表，依次判断区分链表中每一个节点从而生成两个子链表放入新的桶数组(jdk7中由于子链表生成时使用头插法会使得链表节点顺序反转)
 		 	  2):当前桶内所有键值对形成红黑树，依次判断区分红黑树中每一个节点从而生成两个子树放入新的桶数组，如果子树节点数不超过6则触发子树所在桶的链化机制
 	4):树化机制:
@@ -60,7 +60,7 @@ hashmap原理:
 	5):链化机制:
 		1:直接将当前桶的红黑树转化为链表(hashmap中即使结构是红黑树，每个节点也有next属性，不需要用树算法遍历)
 	6):注意事项:
-		1):hashmap的添加方法即使不改变hashmap内部结构也会触发modCount改变，而删除方法必须删除键值对才触发，单纯的replace()方法也不会触发
-          
+		1):hashmap的添加方法必须添加新键值对(非覆盖)才会触发modCount改变，删除方法也必须删除键值对才触发，单纯的replace()方法也不会触发
+        2):hashmap的构造方法如果不添加键值对是不会new桶数组的，hashtable会  
 	
 		
