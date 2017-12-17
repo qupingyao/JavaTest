@@ -22,6 +22,7 @@ public class TestMyClassLoader {
 			System.out.println(obj1 instanceof Load.A);
 			System.out.println(obj2.getClass());
 			System.out.println(obj2 instanceof Load.A);
+			System.out.println("user dir:" + System.getProperty("user.dir"));
 			System.out.println("java ext dir:" + System.getProperty("java.ext.dirs"));
 			System.out.println("java class path:" + System.getProperty("java.class.path"));
 		} catch (Exception e) {
