@@ -12,20 +12,26 @@ hashtable原理:
 	          2):如果目标桶内非空，用key的equals()方法判断目标桶的链表内是否有相同的key
 	          		1):如果有相同的key就直接覆盖value
 	          		2):如果没有相同的key
-	          			1):如果当前hashtable内键值对个数已经达到threshold(还没放新键值对时)，触发rehash机制，重新计算新键值对所在目标桶下标
-	          			2):将新键值对放到目标桶内所有键值对所形成的链表的头部
+	          			1:如果当前hashtable内键值对个数已经达到threshold(还没放新键值对时)，触发rehash机制，重新计算新键值对所在目标桶下标
+	          			2:将新键值对用头插法放入目标桶所有键值对所形成的链表中
 	2):删除元素逻辑:
 	    1:将删除的key调用hash()方法后的值(下面统称hashkey)用求余的方法确定待删除键值对放在哪个目标桶里
-			  1):如果目标桶不为空，用key的equals()方法判断出目标桶内所有键值对所形成链表内是否存在此key，存在则删除该键值对
+			  1):如果目标桶不为空，用key的equals()方法判断出目标桶所有键值对所形成的链表内是否存在此key，存在则删除相应的键值对
 	3):rehash机制(类似hashmap的扩容机制，只是在部分极端情况下桶数组会变小):
 		1:计算rehash后桶数组的capacity和threshold
-			  1):如果oldCapacity=逻辑最大值Integer.MAX_VALUE - 8，rehash结束
-			  1):计算新的桶数组大小capacity = oldCapacity*2+1;
-			  2):如果capacity为负或者超过逻辑最大值Integer.MAX_VALUE - 8 ，调整为逻辑最大值Integer.MAX_VALUE - 8(有可能capacity还小于oldCapacity)
-			  3):按比例调整threshold(如果超过最大值就设置为最大值)
-		2:按照新计算的capacity值新建新的桶数组，对旧桶数组内每一个桶内的所有键值对重新计算其在新桶数组内的桶数组下标，放到对应桶内所有键值对所形成的链表的头部
-	6):注意事项:
-			1):hashtable的添加方法必须添加新键值对(非覆盖)才会触发modCount改变，删除方法也必须删除键值对才触发，单纯的replace()方法也不会触发
-         
-	
+			  1:如果oldCapacity=逻辑最大值 Integer.MAX_VALUE - 8，rehash结束
+			  2:计算新的桶数组大小capacity = oldCapacity*2+1;
+			  	    1):如果capacity为负或者超过逻辑最大值Integer.MAX_VALUE - 8 ，调整为逻辑最大值Integer.MAX_VALUE - 8(有可能capacity还小于oldCapacity)
+			        2):根据loadFactor和capacity调整threshold(如果threshold超过最大值就设置为最大值)
+		2:按照新计算的capacity值新建新的桶数组，对hashtable内所有键值对重新计算其在新桶数组内的下标值，用头插法放入目标桶键值对所形成的链表内
+	4):注意事项:
+	    1):hashtable的添加方法必须添加新键值对(非覆盖)才会触发modCount改变，删除方法也必须删除键值对才触发，单纯的replace()方法也不会触发
+        2):hashtable除了遍历相关操作所有单一方法全部提供同步效果(用synchronized修饰方法，锁对象为hashtable对象自身，迭代器的remove()方法也用了hashtable对象作为锁做了同步)，
+        	      对于遍历相关操作hashtable设计时没有提供同步效果，因为考虑到遍历加锁太影响系统整体性能，会牺牲很多选择(如多线程同时读遍历时无需加锁)，想同步就自己加锁
+        3):hashtable的modCount改变时由于迭代器的遍历没有synchronized同步，且modCount又不是volatile变量，在hashtable迭代器遍历时不一定能看到最新值，所以不一定会报ConcurrentModificationException，
+              java的fail-fast机制只是为了提醒用户容器遍历时被修改了，但是不保证一定会抛出ConcurrentModificationException异常，这是为了让用户自己去处理并发问题，而不是依赖这种机制
+        4):hashtable的keySet，entrySet，values所形成的set集合也是同步容器(用Collections.synchronizedSet()封装，锁对象为hashtable对象自身)
+        5):hashtable因为还实现了Dictionary接口，所以还提供了Enumeration遍历(只有hashtable和vector有)，这种遍历和迭代器遍历相同，只是少了个remove()后门方法，而且没有fail-fast机制，在设计上也没有迭代器遍历合理，因此被取代了 
+		6):hashtable的Enumeration遍历和迭代器遍历都是按桶数组下标从大到小开始的，而hashmap的迭代器遍历是从小到大的
+		7):抛开同异步，hashtable在优化程度上远不如hashmap
 		
