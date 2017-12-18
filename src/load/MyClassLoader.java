@@ -1,4 +1,4 @@
-package Load;
+package load;
 
 import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
@@ -7,7 +7,7 @@ import java.io.FileInputStream;
 
 public class MyClassLoader extends ClassLoader {
 
-	private final static String filePathPre = "src/Load/";
+	private final static String filePathPre = "src/load/";
 
 	private final static String fileExtName = ".class";
 

@@ -1,4 +1,4 @@
-package Algorithm.AvlTree;
+package algorithm.avlTree;
 
 public class NoSuchKeyExistException extends Exception {
 

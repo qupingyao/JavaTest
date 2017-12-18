@@ -1,4 +1,4 @@
-package Algorithm.RbTree;
+package algorithm.rbTree;
 
 public class TestRbTree {
 	

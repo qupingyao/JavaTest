@@ -1,10 +1,8 @@
-package Algorithm.RbTree;
+package algorithm.rbTree;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import Algorithm.AvlTree.SameKeyExistException;
-import Algorithm.AvlTree.AvlTree.AvlTreeNode;
 
 public class RbTree {
 

@@ -1,4 +1,4 @@
-package Algorithm.AvlTree;
+package algorithm.avlTree;
 
 import java.util.HashMap;
 import java.util.Map;

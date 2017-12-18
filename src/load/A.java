@@ -1,4 +1,4 @@
-package Load;
+package load;
 
 public class A {
 

@@ -1,4 +1,4 @@
-package Algorithm.RbTree;
+package algorithm.avlTree;
 
 public class SameKeyExistException extends Exception {
 

@@ -1,4 +1,4 @@
-package Load;
+package load;
 
 /**
  * 一道阿里笔试题

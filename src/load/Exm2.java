@@ -1,4 +1,4 @@
-package Load;
+package load;
 
 /**
  * 不触发A类的初始化,没有创建A类实例对象,只是个数组对象

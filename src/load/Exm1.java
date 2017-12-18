@@ -1,4 +1,4 @@
-package Load;
+package load;
 
 /**
  * Exm1类在加载时,jvm为保证Float是Number的子类不得不先装载这两个类,但不初始化

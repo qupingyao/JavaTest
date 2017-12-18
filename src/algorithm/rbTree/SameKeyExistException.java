@@ -1,4 +1,4 @@
-package Algorithm.AvlTree;
+package algorithm.rbTree;
 
 public class SameKeyExistException extends Exception {
 
