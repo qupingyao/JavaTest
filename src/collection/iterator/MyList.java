@@ -11,10 +11,6 @@ public class MyList implements Iterable<String> {
 		this.list = list;
 	}
 
-	public void add(String str) {
-		list.add(str);
-	}
-
 	@Override
 	public Iterator<String> iterator() {
 		return new myListItr(list.size() - 1);

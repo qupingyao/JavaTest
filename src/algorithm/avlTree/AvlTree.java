@@ -9,10 +9,6 @@ public class AvlTree {
 
 	private AvlTreeNode root;
 
-	public AvlTree() {
-
-	}
-
 	public String getValue(int key) {
 		if (root != null) {
 			return root.getValue(key);
