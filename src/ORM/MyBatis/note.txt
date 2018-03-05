@@ -1,1 +1,60 @@
-https://www.cnblogs.com/my376908915/p/6812666.html
+1:读取mybatis配置文件到一个输入流
+2:新建一个SqlSessionFactoryBuilder对象，该对象build()接收一个输入流，最终输出一个DefaultSqlSessionFactory对象(实现了SqlSessionFactory接口)
+		1.build()方法内部将输入流转化为一个Configuration对象(bulid()方法有重载完整方法为:build(InputStream inputStream, String environment, Properties properties))
+		2.然后根据Configuration对象作为参数创建一个DefaultSqlSessionFactory对象
+3:DefaultSqlSessionFactory打开一个session
+		1.默认使用openSessionFromDataSource(ExecutorType execType, TransactionIsolationLevel level, boolean autoCommit)
+		      方法内部先获取Configuration对象的Environment属性对象
+		      如果这个Environment对象为空或者对象内没有TransactionFactory接口类的对象，则新建一个ManagedTransactionFactory对象(实现了TransactionFactory接口)
+		      否则返回Environment对象内的TransactionFactory接口类的对象(这个对象只可能是ManagedTransactionFactory对象或者JdbcTransactionFactory)
+		     以上步骤必然会返回一个TransactionFactory接口类对象(一般用JdbcTransactionFactory对象)
+		  利用获得到的TransactionFactory接口类对象调用newTransaction(environment.getDataSource(), level, autoCommit)获取Transaction对象
+		
+		
+参考资料:
+http://czj4451.iteye.com/blog/2037759
+http://blog.csdn.net/hcy54213/article/details/70738802
+http://lvwenwen.iteye.com/blog/2045951
+http://m.blog.csdn.net/sdfiiiiii/article/details/60335234
+http://blog.csdn.net/qq924862077/article/details/52599785
+https://www.jianshu.com/p/8d735db9c2c0
+https://www.cnblogs.com/yulinfeng/p/6067867.html
+http://blog.csdn.net/luanlouis/article/details/40422941
+
+http://blog.csdn.net/hupanfeng/article/details/9238127
+
+
+连接池配置参数说明：
+poolMaximumActiveConnections = 10;    最大激活连接队列长度
+poolMaximumIdleConnections = 5;       最大空闲连接队列长度
+poolMaximumCheckoutTime = 20000;      当无法直接获取新连接（激活连接队列和空闲连接队列都满的情况下，如果激活连接队列内最老的连接check时间超过这个值就使用这个连接作为最新的连接）
+poolTimeToWait = 20000;               当无法直接获取新连接（激活连接队列和空闲连接队列都满的情况下，如果激活连接队列内最老的连接check时间不超过poolMaximumCheckoutTime时需要方法wait()的时间）
+poolPingQuery = "NO PING QUERY SET";  测试ping的sql
+poolPingEnabled = false;              是否开启测试ping机制
+poolPingConnectionsNotUsedFor = 0;    如果一个连接的getTimeElapsedSinceLastUse大于poolPingConnectionsNotUsedFor且ping机制开启则需要用sql测试ping
+
+
+PooledConnection对象属性说明：
+checkoutTimestamp;  每次从连接池获取新的连接对象时，放入激活连接队列时更新此时间
+createdTimestamp;   初始化PooledConnection对象时更新，用新连接对象替换老的时拷贝老的createdTimestamp
+lastUsedTimestamp;  初始化PooledConnection对象时更新，用新连接对象替换老的时拷贝老的lastUsedTimestamp
+connectionTypeCode;
+
+
+
+mybaits-spring http://www.mybatis.org/spring/zh/index.html
+http://blog.csdn.net/acm_lkl/article/details/78878578
+
+https://www.cnblogs.com/jabnih/p/5711395.html
+
+https://www.cnblogs.com/zedosu/p/6709943.html
+
+
+mybatis 一级缓存 http://blog.csdn.net/luanlouis/article/details/41280959
+
+Mybatis3源码分析(16)-Sql解析执行-结果集映射(ResultSetHandler): http://blog.csdn.net/ashan_li/article/details/50379458
+
+
+mybatis 执行器 http://blog.csdn.net/qq924862077/article/details/52641979
+
+mapper代理：http://blog.csdn.net/xiaokang123456kao/article/details/76228684

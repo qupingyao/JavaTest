@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC" />
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver" />
+                <property name="url" value="jdbc:mysql://127.0.0.1:3306/study?useUnicode=true&amp;characterEncoding=utf-8" />
+                <property name="username" value="root" />
+                <property name="password" value="" />
+                <!--<property name="defaultTransactionIsolationLevel" value="8" />
+            	<property name="poolMaximumIdleConnections" value="0"/>
+                <property name="poolMaximumActiveConnections" value="1000"/>
+                <property name="poolPingQuery" value="SELECT 1 FROM DUAL" />  
+                <property name="poolPingEnabled" value="true" />-->
+            </dataSource>
+        </environment>
+    </environments>
+    
+    <!--<settings>
+       	<setting name="cacheEnabled" value="true"/>
+    </settings>-->
+        
+    <!--<settings>  
+    	<setting name="defaultExecutorType" value="SIMPLE" />  
+	</settings>-->
+
+	<mappers>
+        <mapper resource="orm/myBatis/mapper/userInfoMapper.xml"/>
+    </mappers>
+
+<!--poolPingEnabled - 默认值是false，当值为true的时候，将开启ping机制。
+poolPingQuery - 对数据库进行ping时所使用的sql。
+poolPingConnectionsNotUsedFor - 默认值是0，单位是毫秒。我们不能在每次使用连接池之前，都使用ping机制，这会使每一条sql的执行，都要额外执行一次ping语句。所以使用此属性来避免这种不合理做法。我们只针对闲置时间超过某个时间的连接，进行ping。本例中的值为1小时，当从连接池中拿出的连接闲置超过1小时，才会对它进行ping。
+   http://www.xuebuyuan.com/1676551.html--> 
+    
+    
+</configuration>

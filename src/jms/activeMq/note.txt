@@ -1,0 +1,65 @@
+https://www.cnblogs.com/zhuxiaojie/p/5564187.html#autoid-6-0-0
+activeMq 整理:https://www.cnblogs.com/huligong1234/p/3801696.html
+activeMq 基础实例:https://www.cnblogs.com/zhuxiaojie/p/5564187.html
+
+activeMq原理：
+1.端口号8161是后台管理端端口号，端口号61616是消息发送和接收的默认tcp端口
+
+	4):也可以修改配置持久化到内存，但是mq服务器一但宕机消息会丢失
+	
+3.整体架构：	
+	producer客户端和consumer客户端通过broker服务端进行联系
+								创建				         创建		                    创建
+	ActiveMQConnectionFactory ------> Connection ------> Session ------> MessageProducer/MessageConsumer
+	在Session级别配置事务和应答模式
+
+4.消息确认机制：
+	1):auto_acknowledge(自动确认)
+	2):client_acknowledge(客户端手动确认)   
+	3):dups_ok_acknowledge(自动批量确认)
+	4):session_transacted(事务提交并确认),session为事务类型时该模式强制开启,session为非事务类型时该模式无效
+	
+	
+	在一个JMS客户端,可以使用本地事务来组合消息的发送和接收。JMS 
+5.事务：
+	事务提交意味着生产的所有消息被发送,消费的所有消息被确认;
+	事务回滚意味着生产的所有消息被销毁,消费的 所有消息被恢复并重新提交,除非它们已经过期。 
+	
+6.producer消息提交模式：
+	1):DeliveryMode.PERSISTENT(MessageProducer上设置):ptp消息默认的提交模式,消息持久化在硬盘中，不会因为mq服务器宕机而消失
+			activeMQ持久化有三种方式:
+			1):jdbc
+			2):amq
+			3):kahadb(默认方式，文件路径为activeMq安装目录/data/kahadb)
+	2):DeliveryMode.NON_PERSISTENT(MessageProducer上设置):消息存放在内存中，读写速度快，mq服务器宕机后消失
+
+7.producer的同步发送模式和异步发送模式：
+	同步发送：producer使用DeliveryMode.PERSISTENT模式发送消息时，Producer.send()方法会被阻塞，直到 broker发送一个消息给生产者（该消息暗示broker已经成功接收到消息并把消息保存到二级存储中。
+	异步发送不会在受到 broker 的确认之前一直阻塞 Producer.send()方法。
+	同步发送下有一个例外，当发送方法在一个事务中时，被阻塞的是 Session.commit()方法而不是Producer.send()方法。Session.commit()方法成功返回意味着所有的持久消息都已被写到二级存储中。
+   
+	想要使用异步发送，在brokerURL中增加jms.alwaysSyncSend=false&jms.useAsyncSend=true
+	如果设置了alwaysSyncSend=true系统将会忽略useAsyncSend设置的值都采用同步
+	     1) 当alwaysSyncSend=false时，‘NON_PERSISTENT’(非持久化)的消息和带事务的消息将使用“异步发送”
+	     2) 当alwaysSyncSend=false时，如果指定了useAsyncSend=true，‘PERSISTENT’(持久化)类型的消息使用异步发送。如果useAsyncSend=false，‘PERSISTENT’(持久化)类型的消息使用同步发送。
+	默认情况下(alwaysSyncSend=false,useAsyncSend=false)，非持久化消息和带事务的消息采用异步发送；对于持久化消息采用同步发送。
+
+8.producer其他发送配置
+  
+   jms.sendTimeout:发送超时时间，默认等于0，如果jms.sendTimeout>0将会忽略（alwaysSyncSend、useAsyncSend、消息是否持久化）所有的消息都是用同步发送！
+   即使使用异步发送，也可以通过producerWindowSize来控制发送端无节制的向broker发送消息
+producerWindowSize:窗口尺寸，用来约束在异步发送时producer端允许积压的(尚未ACK)的消息的尺寸，且只对异步发送有意义。每次发送消息之后，都将会导致memoryUsage尺寸增加(+message.size)，当broker返回producerAck时，如果达到了producerWindowSize上限，即使是异步调用也会被阻塞，防止不停向broker发送消息。
+     通过jms.producerWindowSize=。。。来设置
+     
+9.消息的同步接收和异步接收    
+     同步接收:
+	receive():Message
+	获取下一个消息。这个调用将导致无限期的阻塞，直到有新的消息产生。
+	receive(long timeout):Message
+	获取下一个消息。这个调用可能导致一段时间的阻塞，直到超时或者有新的消息产生。超时则返回null。
+	receiveNoWait():Message
+	获取下一个消息。这个调用不会导致阻塞，如果没有下一个消息，直接返回null。
+	
+	
+	
+activemq常见的一些问题 心得:http://blog.csdn.net/u010310183/article/details/51683141

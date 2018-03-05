@@ -1,0 +1,70 @@
+线程状态图:
+	
+							           其他堵塞                      
+							   /	 \
+LockSupport.unpark()或被中断	  /	      \
+		   sleep()结束或者被中断	 /		   \	LockSupport.park()
+				     t结束	/			\sleep()
+		    IO等待结束,用户输入    /			 \	t.join()
+				resume()  /				  \	  IO等待输入
+			             /				   \  suspend()
+		                /					\
+	                   /					 \		stop()
+		  start()	  /		线程获得时间片		  \		    运行完成、
+	新建------------>可运行<--------------------->运行------------->结束
+					  \		时间片用完,yield()    /|
+					   \				      / |
+						\					 /  |
+						 \					/   |
+						  \				   /同步锁|
+					拿到锁         \			  /     |
+						    \			 /		|
+						     \			/		|
+							  \	       /		|
+						       \	  /			|
+								 同步堵塞   			|
+								(锁池队列)			|wait()
+								   	\			|
+									 \			|
+							notify()  \			|
+							notifyAll()\		|
+							被中断		\		|
+										 \		|
+										         等待队列
+										  
+										
+sleep()方法是一个静态方法，java没有办法指定一个线程sleep()，
+Thread t = ...
+t.sleep()只是使当前线程sleep()，不一定是t睡眠	，好的习惯是使用Thread.sleep()	
+
+
+线程中断相关方法:
+Thread.interrupted()   判断当前线程是否被中断，同时设置中断标记为false
+底层方法为: Thread.currentThread().isInterrupted(true);		
+
+thread.isInterrupted() 判断执行线程是否被中断
+thread.interrupt() 设置指定线程的中断状态为true；指定线程当前代码必要则抛出InterruptedException异常。
+	
+阻塞在wait(),sleep(),join() 接收到中断请求(哪怕这个请求接收时还没运行到堵塞操作)后设置中断标记为false,抛出InterruptedException异常,对于wait()方法，无论try-catch是否在同步代码块里面还是外面，都需要先得到同步锁,因此捕获异常可能会延迟
+
+内部机制可能是wait()时系统会监听wait()线程的中断标记,一旦中断标记为true,将wait()线程扔到锁池队列，获得锁后才设置中断标记为false,执行catch代码
+					
+main()方法的主线程是由jvm在启动的时候创建的	非守护线程
+守护线程eg：垃圾回收线程，并且这种线程并不属于程序中不可或缺的部分
+当所有的非守护线程结束时，jvm退出，同时会杀死所有守护线程		
+
+
+thread废弃方法:
+void destroy() ：破坏线程，不释放锁，已经不能再使用，使用会抛出NoSuchMethodError。 
+void suspend() ：挂起线程，不要使用。suspend会将当前线程挂起，但是并不会释放所持有的资源，如果恢复线程在调用resume也需要那个资源，那么就会形成死锁。当然可以通过你精湛的编程来避免死锁，但是这个方法具有固有的死锁倾向。所以不建议使用
+。其他暂停方法为什么可用：
+wait方法会释放锁，所以不会有死锁问题
+sleep方法虽然不释放锁，但是它不需要唤醒，在使用的时候已经指定想要的睡眠时间了。
+void resume() ：恢复线程，不要使用。
+void stop() ：停止线程释放锁，不要使用。stop方法会立即中断线程，虽然会释放持有的锁，
+void stop(Throwable obj) ：同上。
+
+yield不会释放锁	
+					
+					
+	

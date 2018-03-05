@@ -1,0 +1,17 @@
+https://www.cnblogs.com/my376908915/p/6812666.html
+https://www.cnblogs.com/zqyanywn/p/5922656.html
+
+maxActive=30  //最大活动连接:连接池在同一时间能够分配的最大活动连接的数量
+maxIdle=24    //最大空闲连接:连接池中容许保持空闲状态的最大连接数量,超过的空闲连接将被释放,
+minIdle=3     //最小空闲连接:连接池中容许保持空闲状态的最小连接数量,低于这个数量将创建新的连接
+maxWait=1800  //最大等待时间:当没有可用连接时,连接池等待连接被归还的最大时间(以毫秒计数),
+timeBetweenEvictionRunsMillis=60000  //在空闲连接回收器线程运行期间休眠的时间值,以毫秒为单位
+minEvictableIdleTimeMillis=180000    //连接在池中保持空闲而不被空闲连接回收器线程,(如果有)回收的最小时间值，单位毫秒
+testWhileIdle=true
+testOnReturn=true
+testOnBorrow=true
+validationQuery=select 1
+removeAbandoned=true  //标记是否删除泄露的连接,如果他们超过了removeAbandonedTimout的限制.
+如果设置为true, 连接被认为是被泄露并且可以被删除,如果空闲时间超过removeAbandonedTimeout. 
+设置为true可以为写法糟糕的没有关闭连接的程序修复数据库连接.
+removeAbandonedTimeout=180 //泄露的连接可以被删除的超时值

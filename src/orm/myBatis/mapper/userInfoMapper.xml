@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="orm.myBatis.dao.UserInfoDao">	
+
+	<select id="getUserByUserCode" parameterType="String" resultType="orm.myBatis.domain.UserInfo">
+		select * from employee where userCode=#{userCode}
+	</select>
+	
+	<select id="getUserByUserId" parameterType="int" resultType="orm.myBatis.domain.UserInfo">
+		select * from employee where id=#{id}
+	</select>
+	
+	<select id="insertUser" parameterType="orm.myBatis.domain.UserInfo">
+		insert into employee
+			(name,
+			userCode,
+			age,
+			creationTime,
+			updateTime,
+			yn)
+		VALUES(#{name,jdbcType=VARCHAR},
+			#{userCode,jdbcType=VARCHAR},
+			#{age,jdbcType=INTEGER},
+			#{creationTime,jdbcType=TIMESTAMP},
+			#{updateTime,jdbcType=TIMESTAMP},
+			1)
+	</select>
+	
+</mapper>
+	
