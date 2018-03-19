@@ -3,31 +3,46 @@ package thread.thread;
 public class TestThreadGroup {
 
 	public static void main(String[] args) {
-		Thread t1 = new Thread(new ThreadGroup("group1"), "thread1") {
-			@Override
-			public void run() {
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		};
 
-		Thread t2 = new Thread("thread2") {
+		ThreadGroup mainTGroup = Thread.currentThread().getThreadGroup();
+		ThreadGroup systemTGroup = mainTGroup.getParent();
+		ThreadGroup fatherTGroup = new ThreadGroup(mainTGroup, "fatherTGroup");
+		ThreadGroup sonTGroup = new ThreadGroup(fatherTGroup, "sonTGroup");
+		Thread mainThread = Thread.currentThread();
+		Thread t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
 				try {
-					Thread.sleep(5000);
+					mainThread.join();
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-		};
+		}, "t1");
+		Thread t2 = new Thread(fatherTGroup, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					mainThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}, "t2");
+		Thread t3 = new Thread(sonTGroup, new Runnable() {
+			@Override
+			public void run() {
+				try {
+					mainThread.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}, "t3");
 		t1.start();
 		t2.start();
-		ThreadGroup group = Thread.currentThread().getThreadGroup().getParent();
-		group.list();
+		t3.start();
+		systemTGroup.list();
 
 	}
 

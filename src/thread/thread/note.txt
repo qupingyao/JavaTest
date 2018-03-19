@@ -1,18 +1,25 @@
 线程状态图:
+
+
+
+
+
+
+
 	
-							           其他堵塞                      
+							           堵塞状态(其他堵塞)                    
 							   /	 \
-LockSupport.unpark()或被中断	  /	      \
-		   sleep()结束或者被中断	 /		   \	LockSupport.park()
-				     t结束	/			\sleep()
-		    IO等待结束,用户输入    /			 \	t.join()
-				resume()  /				  \	  IO等待输入
-			             /				   \  suspend()
+        unpark()唤醒/park()被中断 /	      \park()
+	    sleep时间到期/sleep被中断  /		   \sleep()
+join时间到期/其他线程结束/join被中断	/			\join等待其他线程
+		           IO等待结束  /			 \IO等待
+				  resume()/				  \suspend()
+			             /				   \  
 		                /					\
-	                   /					 \		stop()
-		  start()	  /		线程获得时间片		  \		    运行完成、
-	新建------------>可运行<--------------------->运行------------->结束
-					  \		时间片用完,yield()    /|
+	                   /					 \		    
+		  start()	  /		        线程获得时间片	  \		   stop()/运行完成
+ 新建状态------------>可运行状态<--------------------->运行状态---------------->结束状态
+					  \		时间片用完/yield()    /|
 					   \				      / |
 						\					 /  |
 						 \					/   |
@@ -29,42 +36,44 @@ LockSupport.unpark()或被中断	  /	      \
 							notify()  \			|
 							notifyAll()\		|
 							被中断		\		|
-										 \		|
+										 \		\|/
 										         等待队列
 										  
 										
-sleep()方法是一个静态方法，java没有办法指定一个线程sleep()，
-Thread t = ...
-t.sleep()只是使当前线程sleep()，不一定是t睡眠	，好的习惯是使用Thread.sleep()	
 
 
-线程中断相关方法:
-Thread.interrupted()   判断当前线程是否被中断，同时设置中断标记为false
-底层方法为: Thread.currentThread().isInterrupted(true);		
 
-thread.isInterrupted() 判断执行线程是否被中断
-thread.interrupt() 设置指定线程的中断状态为true；指定线程当前代码必要则抛出InterruptedException异常。
-	
-阻塞在wait(),sleep(),join() 接收到中断请求(哪怕这个请求接收时还没运行到堵塞操作)后设置中断标记为false,抛出InterruptedException异常,对于wait()方法，无论try-catch是否在同步代码块里面还是外面，都需要先得到同步锁,因此捕获异常可能会延迟
-
-内部机制可能是wait()时系统会监听wait()线程的中断标记,一旦中断标记为true,将wait()线程扔到锁池队列，获得锁后才设置中断标记为false,执行catch代码
+java线程中断机制:
+	java不希望线程有任何的方法直接堵塞或者终止其他线程，因为你根本无从得知目标线程当前是否持有重要的锁，而直接让目标线程释放锁严重破坏程序逻辑。因此stop()，suspend()被废弃了
+	java借助中断标记间接实现堵塞目标线程或终止其他线程
+	中断相关方法:
+		static boolean interrupted()  获取当前线程的中断状态，同时设置当前线程中断状态为false
+		boolean isInterrupted() 获取指定线程的中断状态
+		boolean interrupt() 设置指定线程的中断状态为true
+	注意事项:
+	1:一个线程处于新建状态被中断不会修改中断状态为true，一个线程处于结束状态时中断状态必为false
+	2:对于wait()，sleep()这些方法，操作系统会在堵塞状态下轮询堵塞线程的中断状态,一旦发现为true则堵塞线程会离开当前状态进入下一个状态,该线程会在获得下一个时间片时执行catch内的代码，同时设置中断状态为false
+	3:对于suspend()，park()这些方法，操作系统会在堵塞状态下轮询堵塞线程的中断状态,一旦发现为true则堵塞线程会离开当前状态进入下一个状态,该线程会在获得下一个时间片时继续向下执行代码，中断状态保持为true
 					
 main()方法的主线程是由jvm在启动的时候创建的	非守护线程
 守护线程eg：垃圾回收线程，并且这种线程并不属于程序中不可或缺的部分
 当所有的非守护线程结束时，jvm退出，同时会杀死所有守护线程		
 
 
-thread废弃方法:
-void destroy() ：破坏线程，不释放锁，已经不能再使用，使用会抛出NoSuchMethodError。 
-void suspend() ：挂起线程，不要使用。suspend会将当前线程挂起，但是并不会释放所持有的资源，如果恢复线程在调用resume也需要那个资源，那么就会形成死锁。当然可以通过你精湛的编程来避免死锁，但是这个方法具有固有的死锁倾向。所以不建议使用
-。其他暂停方法为什么可用：
-wait方法会释放锁，所以不会有死锁问题
-sleep方法虽然不释放锁，但是它不需要唤醒，在使用的时候已经指定想要的睡眠时间了。
-void resume() ：恢复线程，不要使用。
-void stop() ：停止线程释放锁，不要使用。stop方法会立即中断线程，虽然会释放持有的锁，
-void stop(Throwable obj) ：同上。
+Thread类方法比较:
+	1.void destroy():远古方法，已废弃，使用会抛出NoSuchMethodError异常
+	2.void stop():强制终止指定线程，释放所有锁，无法保证同步块的事务性，已废弃
+	3.void suspend()和 void resume():suspend()堵塞指定线程，不释放锁，直到调用resume()，两方法已废弃。
+	4.void sleep():堵塞当前线程，该方法虽然不释放锁，但是不需要唤醒，且需要指定时间，该方法是Thread类的静态方法，
+		java没有办法指定某个线程sleep()，因此最好写成Thread.sleep()而不是Thread t = ...,t.sleep(),两者效果相同但前者可读性好
+	5.void join():可指定时间也可不指定，底层实现是wait()和notify()，当前线程调用指定线程的join()方法后，当前线程会堵塞在指定线程对象的wait()上，
+		指定线程进入结束状态时会默认notify所有堵塞在指定线程等待队列上的所有线程，手动调用notify()方法无法破解，join()方法内部会循环判断指定线程状态和join时间长度
+	
 
 yield不会释放锁	
+
+
+在前面就提到过AQS内部维护着一个FIFO的CLH队列，所以AQS并不支持基于优先级的同步策略。至于为何要选择CLH队列，主要在于CLH锁相对于MSC锁，他更加容易处理cancel和timeout，同时他具备进出队列快、无所、畅通无阻、检查是否有线程在等待也非常容易（head != tail,头尾指针不同）。当然相对于原始的CLH队列锁，ASQ采用的是一种变种的CLH队列锁：
 					
 					
 	
