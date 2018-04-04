@@ -1,24 +1,19 @@
-package proxy.dynamicProxy.jdkProxy;
-
-import proxy.dynamicProxy.jdkProxy.AInterface;
+package proxy.staticProxy;
 
 /**
  * 目标类
  */
-public class A implements AInterface {
+public class Father {
 
-	@Override
 	public void say(String word) {
 		System.out.println("I say:" + word);
 	}
 
-	@Override
 	public void cal(int num) {
 		System.out.println("I cal:" + num);
 	}
 
-	@Override
-	public A getObject() {
+	public Father getObject() {
 		System.out.println("I get Object");
 		return this;
 	}

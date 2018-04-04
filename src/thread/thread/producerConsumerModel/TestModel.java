@@ -1,6 +1,6 @@
 package thread.thread.producerConsumerModel;
 
-public class testModel {
+public class TestModel {
 
 	private final static int initCapacity = 3;
 

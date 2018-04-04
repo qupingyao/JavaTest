@@ -1,25 +1,29 @@
-package proxy.dynamicProxy.jdkProxy1;
+package proxy.dynamicProxy.jdkProxy;
 
+import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.UndeclaredThrowableException;
-import proxy.dynamicProxy.jdkProxy1.AInterface;
+import proxy.dynamicProxy.jdkProxy.AInterface;
 
-public final class $Proxy0 implements AInterface {
+/**
+ * jdk代理生成的匿名代理类解除Proxy类继承限制后的源代码
+ */
+public final class $Proxy1 implements AInterface {
 	private static Method m1;
-	private static Method m4;
 	private static Method m5;
 	private static Method m2;
+	private static Method m4;
 	private static Method m3;
 	private static Method m0;
-	public MyInvocationHandler h;
+	private InvocationHandler h;
 
-	public $Proxy0(MyInvocationHandler myInvocationHandler) {
-		h = myInvocationHandler;
+	public $Proxy1(InvocationHandler paramInvocationHandler) {
+		h = paramInvocationHandler;
 	}
 
 	public final boolean equals(Object paramObject) {
 		try {
-			return ((Boolean) this.h.invoke(m1, new Object[] { paramObject })).booleanValue();
+			return ((Boolean) this.h.invoke(this, m1, new Object[] { paramObject })).booleanValue();
 		} catch (Error | RuntimeException localError) {
 			throw localError;
 		} catch (Throwable localThrowable) {
@@ -29,18 +33,8 @@ public final class $Proxy0 implements AInterface {
 
 	public final void cal(int paramInt) {
 		try {
-			this.h.invoke(m4, new Object[] { Integer.valueOf(paramInt) });
+			this.h.invoke(this, m5, new Object[] { Integer.valueOf(paramInt) });
 			return;
-		} catch (Error | RuntimeException localError) {
-			throw localError;
-		} catch (Throwable localThrowable) {
-			throw new UndeclaredThrowableException(localThrowable);
-		}
-	}
-
-	public final AInterface getObj() {
-		try {
-			return (AInterface) this.h.invoke(m5, null);
 		} catch (Error | RuntimeException localError) {
 			throw localError;
 		} catch (Throwable localThrowable) {
@@ -50,7 +44,7 @@ public final class $Proxy0 implements AInterface {
 
 	public final String toString() {
 		try {
-			return (String) this.h.invoke(m2, null);
+			return (String) this.h.invoke(this, m2, null);
 		} catch (Error | RuntimeException localError) {
 			throw localError;
 		} catch (Throwable localThrowable) {
@@ -60,8 +54,18 @@ public final class $Proxy0 implements AInterface {
 
 	public final void say(String paramString) {
 		try {
-			this.h.invoke(m3, new Object[] { paramString });
+			this.h.invoke(this, m4, new Object[] { paramString });
 			return;
+		} catch (Error | RuntimeException localError) {
+			throw localError;
+		} catch (Throwable localThrowable) {
+			throw new UndeclaredThrowableException(localThrowable);
+		}
+	}
+
+	public final AInterface getObject() {
+		try {
+			return (AInterface) this.h.invoke(this, m3, null);
 		} catch (Error | RuntimeException localError) {
 			throw localError;
 		} catch (Throwable localThrowable) {
@@ -71,7 +75,7 @@ public final class $Proxy0 implements AInterface {
 
 	public final int hashCode() {
 		try {
-			return ((Integer) this.h.invoke(m0, null)).intValue();
+			return ((Integer) this.h.invoke(this, m0, null)).intValue();
 		} catch (Error | RuntimeException localError) {
 			throw localError;
 		} catch (Throwable localThrowable) {
@@ -83,13 +87,13 @@ public final class $Proxy0 implements AInterface {
 		try {
 			m1 = Class.forName("java.lang.Object").getMethod("equals",
 					new Class[] { Class.forName("java.lang.Object") });
-			m4 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("cal", new Class[] { Integer.TYPE });
-			m5 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("getObj", new Class[0]);
+			m5 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("cal", new Class[] { Integer.TYPE });
 			m2 = Class.forName("java.lang.Object").getMethod("toString", new Class[0]);
-			m3 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("say",
+			m4 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("say",
 					new Class[] { Class.forName("java.lang.String") });
+			m3 = Class.forName("proxy.dynamicProxy.jdkProxy.AInterface").getMethod("getObject", new Class[0]);
 			m0 = Class.forName("java.lang.Object").getMethod("hashCode", new Class[0]);
-//			return;
+			// return;
 		} catch (NoSuchMethodException localNoSuchMethodException) {
 			throw new NoSuchMethodError(localNoSuchMethodException.getMessage());
 		} catch (ClassNotFoundException localClassNotFoundException) {

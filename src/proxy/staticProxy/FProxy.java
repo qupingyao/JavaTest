@@ -3,18 +3,18 @@ package proxy.staticProxy;
 /**
  * 代理类
  */
-public class AProxy implements AInterface {
+public class FProxy extends Father {
 
-	private AInterface target;
+	private Father target;
 
-	public AProxy(AInterface target) {
+	public FProxy(Father target) {
 		this.target = target;
 	}
 
 	@Override
 	public void say(String word) {
 		System.out.println("proxy method say start");
-		target.say(word);
+		super.say(word);
 		System.out.println("proxy method say end");
 	}
 
@@ -26,9 +26,9 @@ public class AProxy implements AInterface {
 	}
 
 	@Override
-	public AInterface getObject() {
+	public Father getObject() {
 		System.out.println("proxy method getObject start");
-		AInterface object = target.getObject();
+		Father object = target.getObject();
 		System.out.println("proxy method getObject end");
 		return this;
 	}

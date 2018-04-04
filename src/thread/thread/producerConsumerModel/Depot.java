@@ -1,17 +1,20 @@
 package thread.thread.producerConsumerModel;
 
-public class Depot {
+import java.util.LinkedList;
 
-	private int num = 0;
+public class Depot {
 
 	private int maxNum;
 
+	private LinkedList<Thing> list;
+
 	public Depot(int maxNum) {
 		this.maxNum = maxNum;
+		list = new LinkedList<Thing>();
 	}
 
-	public synchronized void product(String productorName) {
-		while (num >= maxNum) {
+	public synchronized void product(String productorName, Thing thing) {
+		while (list.size() >= maxNum) {
 			System.out.println("depot is full");
 			try {
 				this.wait();
@@ -19,13 +22,13 @@ public class Depot {
 				e.printStackTrace();
 			}
 		}
-		num++;
-		System.out.println(productorName + " product, currentNum: " + num);
+		list.add(thing);
+		System.out.println(productorName + " product, thingId: " + thing.getId() + ", remain:" + list.size());
 		this.notifyAll();
 	}
 
 	public synchronized void consume(String consumerName) {
-		while (num <= 0) {
+		while (list.size() <= 0) {
 			System.out.println("depot is empty");
 			try {
 				this.wait();
@@ -33,8 +36,8 @@ public class Depot {
 				e.printStackTrace();
 			}
 		}
-		num--;
-		System.out.println(consumerName + " consume, currentNum: " + num);
+		Thing thing = list.pop();
+		System.out.println(consumerName + " consume, thingId: " + thing.getId() + ", remain: " + list.size());
 		this.notifyAll();
 	}
 

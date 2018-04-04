@@ -14,10 +14,9 @@ public class MyInvocationHandler implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		System.out.println("proxy start");
-		Object result = method.invoke(target, args);
-		System.out.println("proxy end");
-//		return result;
+		System.out.println("proxy method " + method.getName() + " start");
+		method.invoke(target, args);
+		System.out.println("proxy method " + method.getName() + " end");
 		return proxy;
 	}
 

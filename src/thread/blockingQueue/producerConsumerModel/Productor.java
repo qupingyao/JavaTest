@@ -1,4 +1,7 @@
-package thread.thread.producerConsumerModel;
+package thread.blockingQueue.producerConsumerModel;
+
+import thread.blockingQueue.producerConsumerModel.Depot;
+import thread.blockingQueue.producerConsumerModel.Thing;
 
 public class Productor implements Runnable {
 
