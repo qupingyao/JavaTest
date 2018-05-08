@@ -21,7 +21,7 @@ hashtable原理:
 		1:计算rehash后桶数组的capacity和threshold
 			  1:如果oldCapacity=逻辑最大值 Integer.MAX_VALUE - 8，rehash结束
 			  2:计算新的桶数组大小capacity = oldCapacity*2+1;
-			  	    1):如果capacity为负或者超过逻辑最大值Integer.MAX_VALUE - 8 ，调整为逻辑最大值Integer.MAX_VALUE - 8(有可能capacity还小于oldCapacity)
+			  	    1):如果capacity为负或者超过逻辑最大值Integer.MAX_VALUE - 8 ，调整为逻辑最大值Integer.MAX_VALUE - 8
 			        2):根据loadFactor和capacity调整threshold(如果threshold超过最大值就设置为最大值)
 		2:按照新计算的capacity值新建新的桶数组，对hashtable内所有键值对重新计算其在新桶数组内的下标值，用头插法放入目标桶键值对所形成的链表内
 	4):注意事项:

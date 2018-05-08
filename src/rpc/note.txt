@@ -1,5 +1,7 @@
 示例中的rpc框架实现了客户端，服务端，注册中心三个角色，客户端使用代理对象借助反射调用服务端代码，之后将调用结果借助socket通信返回，注意:客户端调用服务端代码的资源消耗在服务端
 示例中的rpc框架的缺点和改进方法:
 	1:示例中网络通信采用的socket是基于BIO实现的，IO效率不高，可以使用NIO或直接使用Netty替代BIO实现
-	2:示例中对象传输采用java原生的序列化机制，占内存多，运行效率低，可以基于json传输数据，或者使用开源序列化框架Hadoop Avro或Google protobuf
+	2:示例中对象传输采用java原生的序列化机制，占内存多，运行效率低，可以基于json字符串传输数据，或者使用开源序列化框架Hadoop Avro或Google protobuf
 	3:注册中心可以使用Zookeeper实现分布式管理，能够让框架更加稳定
+	
+备注:示例中的rpc框架传输层使用tcp协议，应用层采用自定义格式(interfaceClass,methodName,methodParameterTypes)的协议
