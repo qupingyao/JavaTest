@@ -1,4 +1,4 @@
-package rpc;
+package rpc.example;
 
 public class A implements AInterface {
 
@@ -7,5 +7,5 @@ public class A implements AInterface {
 		System.out.println("I say:" + word);
 		return word;
 	}
-	
+
 }

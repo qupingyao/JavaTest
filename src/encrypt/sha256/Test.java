@@ -1,6 +1,7 @@
 package encrypt.sha256;
 
 import encrypt.CommonTools;
+import encrypt.Constant;
 
 public class Test {
 
@@ -8,11 +9,11 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			byte[] sourceArr = text.getBytes("UTF-8");
+			byte[] sourceArr = text.getBytes(Constant.defaultCharset);
 			System.out.println("source content(char): " + text);
-			System.out.println("source content(byte): " + CommonTools.printByteArr(sourceArr));
+			System.out.println("source content(byte): " + CommonTools.getByteArrStr(sourceArr));
 			byte[] encode8Arr = Sha256Tools.encode(sourceArr);
-			System.out.println("after sha256 encode(byte): " + CommonTools.printByteArr(encode8Arr));
+			System.out.println("after sha256 encode(byte): " + CommonTools.getByteArrStr(encode8Arr));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

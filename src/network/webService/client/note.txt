@@ -1,0 +1,3 @@
+webservice的本质是一个http-post请求，在请求体中采用soap协议(simple object access protocol,基于xml)
+webservice在使用客户端代码调用时，可像使用socket一样指定超时时间，且可以指定服务的WSDL地址(客户端代码自身会绑定一个默认的WSDL地址，就是代码生成时设置的WSDL地址，但是客户端代码本质是一个socket请求，不会影响服务端的逻辑，因此只要改下WSDL地址，从测试环境导入的客户端代码也能用于生产环境的调用)
+在客户端示例代码中使用原生的socket调用webservice服务时，由于响应报文采用分块编码(Transfer-encoding: chunked，http响应报文分块传输给客户端，每一块头部都用一行16进制数标识每块实际内容大小，最后一块为0，可以提高用户体验(如返回html页面，至少能看部分内容而非全部空白)，需要手动解析响应报文，不像HttpURLConnection已帮你自动实现，且由于分块传输socket通信没有优化，速度较慢

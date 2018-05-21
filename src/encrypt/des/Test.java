@@ -1,6 +1,7 @@
 package encrypt.des;
 
 import encrypt.CommonTools;
+import encrypt.Constant;
 
 public class Test {
 
@@ -14,16 +15,16 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			byte[] keyArr = key.getBytes("UTF-8");
-			byte[] ivArr = iv.getBytes("UTF-8");
-			byte[] sourceArr = text.getBytes("UTF-8");
+			byte[] keyArr = key.getBytes(Constant.defaultCharset);
+			byte[] ivArr = iv.getBytes(Constant.defaultCharset);
+			byte[] sourceArr = text.getBytes(Constant.defaultCharset);
 			System.out.println("source content(char): " + text);
-			System.out.println("source content(byte): " + CommonTools.printByteArr(sourceArr));
+			System.out.println("source content(byte): " + CommonTools.getByteArrStr(sourceArr));
 			byte[] encodeArr = DesTools.encode(sourceArr, keyArr, ivArr, mode);
-			System.out.println("after des encode(byte): " + CommonTools.printByteArr(encodeArr));
+			System.out.println("after des encode(byte): " + CommonTools.getByteArrStr(encodeArr));
 			byte[] decodeArr = DesTools.decode(encodeArr, keyArr, ivArr, mode);
-			System.out.println("after des decode(char): " + new String(decodeArr, "UTF-8"));
-			System.out.println("after des decode(byte): " + CommonTools.printByteArr(decodeArr));
+			System.out.println("after des decode(char): " + new String(decodeArr, Constant.defaultCharset));
+			System.out.println("after des decode(byte): " + CommonTools.getByteArrStr(decodeArr));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

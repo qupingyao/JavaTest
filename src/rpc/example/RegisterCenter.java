@@ -1,4 +1,4 @@
-package rpc;
+package rpc.example;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -15,9 +15,9 @@ public class RegisterCenter implements RegisterCenterInterface {
 
 	public static final int registerCenterPort = 80;
 
-	private static HashMap<Class, ArrayList<RegisterMsg>> registerMap = new HashMap<Class, ArrayList<RegisterMsg>>();
-
 	private static final RegisterCenter instance = new RegisterCenter();
+
+	private static HashMap<Class, ArrayList<RegisterMsg>> registerMap = new HashMap<Class, ArrayList<RegisterMsg>>();
 
 	private RegisterCenter() {
 
@@ -33,37 +33,37 @@ public class RegisterCenter implements RegisterCenterInterface {
 				new Thread(new Runnable() {
 					@Override
 					public void run() {
+						ObjectInputStream input = null;
+						ObjectOutputStream output = null;
 						try {
-							ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-							ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+							input = new ObjectInputStream(socket.getInputStream());
+							output = new ObjectOutputStream(socket.getOutputStream());
+							String methodName = (String) input.readObject();
+							Class<?>[] methodParameterTypes = (Class<?>[]) input.readObject();
+							Object[] args = (Object[]) input.readObject();
 							try {
-								String methodName = (String) input.readObject();
-								Class<?>[] methodParameterTypes = (Class<?>[]) input.readObject();
-								Object[] args = (Object[]) input.readObject();
 								Method implMethod = RegisterCenter.class.getMethod(methodName, methodParameterTypes);
-								try {
-									Object result = implMethod.invoke(instance, args);
-									output.writeObject(result);
-								} catch (Throwable t) {
-									output.writeObject(t);
-								}
-							} finally {
-								if (input != null) {
-									input.close();
-								}
-								if (output != null) {
-									output.close();
-								}
+								Object result = implMethod.invoke(instance, args);
+								output.writeObject(result);
+							} catch (Throwable t) {
+								output.writeObject(t);
 							}
 						} catch (Exception e) {
 							e.printStackTrace();
 						} finally {
-							try {
-								if (socket != null) {
-									socket.close();
+							if (input != null) {
+								try {
+									input.close();
+								} catch (Exception e) {
+									e.printStackTrace();
 								}
-							} catch (Exception e) {
-								e.printStackTrace();
+							}
+							if (output != null) {
+								try {
+									output.close();
+								} catch (Exception e) {
+									e.printStackTrace();
+								}
 							}
 						}
 					}

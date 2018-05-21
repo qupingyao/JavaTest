@@ -1,4 +1,4 @@
-package rpc;
+package rpc.example;
 
 public class TestRpcRegisterCenter {
 

@@ -1,0 +1,1 @@
+webservice客户端代码由wsimport命令导入，只需要知道webservice的WSDL地址就行了

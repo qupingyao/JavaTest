@@ -1,6 +1,7 @@
 package encrypt.md5;
 
 import encrypt.CommonTools;
+import encrypt.Constant;
 
 public class Test {
 
@@ -8,13 +9,13 @@ public class Test {
 
 	public static void main(String[] args) {
 		try {
-			byte[] sourceArr = text.getBytes("UTF-8");
+			byte[] sourceArr = text.getBytes(Constant.defaultCharset);
 			System.out.println("source content(char): " + text);
-			System.out.println("source content(byte): " + CommonTools.printByteArr(sourceArr));
+			System.out.println("source content(byte): " + CommonTools.getByteArrStr(sourceArr));
 			byte[] encode8Arr = Md5Tools.encode8(sourceArr);
-			System.out.println("after md5 encode8(byte): " + CommonTools.printByteArr(encode8Arr));
+			System.out.println("after md5 encode8(byte): " + CommonTools.getByteArrStr(encode8Arr));
 			byte[] encode16Arr = Md5Tools.encode16(sourceArr);
-			System.out.println("after md5 encode16(byte): " + CommonTools.printByteArr(encode16Arr));
+			System.out.println("after md5 encode16(byte): " + CommonTools.getByteArrStr(encode16Arr));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -1,4 +1,4 @@
-package rpc;
+package rpc.example;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,9 +11,9 @@ import java.util.HashMap;
 
 public class RpcServer {
 
-	private static HashMap<Class, Class> localMap = new HashMap<Class, Class>();
-
 	private static final String serverHost = "127.0.0.1";
+
+	private static HashMap<Class, Class> localMap = new HashMap<Class, Class>();
 
 	private static ArrayList<Integer> portListenList = new ArrayList<Integer>();
 
@@ -33,46 +33,46 @@ public class RpcServer {
 					try {
 						server = new ServerSocket(port);
 						while (true) {
-							final Socket socket = server.accept();
+							Socket socket = server.accept();
 							new Thread(new Runnable() {
 								@Override
 								public void run() {
+									ObjectInputStream input = null;
+									ObjectOutputStream output = null;
 									try {
-										ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-										ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+										input = new ObjectInputStream(socket.getInputStream());
+										output = new ObjectOutputStream(socket.getOutputStream());
+										Class interfaceClass = (Class) input.readObject();
+										String methodName = (String) input.readObject();
+										Class<?>[] methodParameterTypes = (Class<?>[]) input.readObject();
+										Object[] args = (Object[]) input.readObject();
 										try {
-											Class interfaceClass = (Class) input.readObject();
-											String methodName = (String) input.readObject();
-											Class<?>[] methodParameterTypes = (Class<?>[]) input.readObject();
-											Object[] args = (Object[]) input.readObject();
-											try {
-												Class implClass = localMap.get(interfaceClass);
-												if (implClass == null) {
-													throw new ClassNotFoundException(
-															interfaceClass + " is not publish");
-												}
-												Method implMethod = implClass.getMethod(methodName,
-														methodParameterTypes);
-												Object result = implMethod.invoke(implClass.newInstance(), args);
-												output.writeObject(result);
-											} catch (Throwable t) {
-												output.writeObject(t);
+											Class implClass = localMap.get(interfaceClass);
+											if (implClass == null) {
+												throw new ClassNotFoundException(interfaceClass + " is not publish");
 											}
-										} finally {
-											if (input != null) {
-												input.close();
-											}
-											if (output != null) {
-												output.close();
-											}
+											Method implMethod = implClass.getMethod(methodName, methodParameterTypes);
+											Object result = implMethod.invoke(implClass.newInstance(), args);
+											output.writeObject(result);
+										} catch (Throwable t) {
+											output.writeObject(t);
 										}
 									} catch (Exception e) {
 										e.printStackTrace();
 									} finally {
-										try {
-											socket.close();
-										} catch (Exception e) {
-											e.printStackTrace();
+										if (input != null) {
+											try {
+												input.close();
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
+										}
+										if (output != null) {
+											try {
+												output.close();
+											} catch (Exception e) {
+												e.printStackTrace();
+											}
 										}
 									}
 								}
