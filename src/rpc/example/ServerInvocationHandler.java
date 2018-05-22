@@ -39,11 +39,8 @@ public class ServerInvocationHandler implements InvocationHandler {
 				}
 				return result;
 			} finally {
-				if (input != null) {
-					input.close();
-				}
-				if (output != null) {
-					output.close();
+				if (socket != null) {
+					socket.close();
 				}
 			}
 		} else {

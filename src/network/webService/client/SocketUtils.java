@@ -39,13 +39,6 @@ public class SocketUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (output != null) {
-				try {
-					output.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
 			if (byteArrayOutputStream != null) {
 				try {
 					byteArrayOutputStream.close();
@@ -53,9 +46,9 @@ public class SocketUtils {
 					e.printStackTrace();
 				}
 			}
-			if (input != null) {
+			if (socket != null) {
 				try {
-					input.close();
+					socket.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

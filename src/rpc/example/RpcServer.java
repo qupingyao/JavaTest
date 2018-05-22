@@ -60,16 +60,9 @@ public class RpcServer {
 									} catch (Exception e) {
 										e.printStackTrace();
 									} finally {
-										if (input != null) {
+										if (socket != null) {
 											try {
-												input.close();
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
-										}
-										if (output != null) {
-											try {
-												output.close();
+												socket.close();
 											} catch (Exception e) {
 												e.printStackTrace();
 											}
