@@ -1,9 +1,9 @@
-package rpc.example;
+package rpc.myFramework;
 
-import rpc.example.AInterface;
-import rpc.example.BInterface;
-import rpc.example.CInterface;
-import rpc.example.RpcClient;
+import rpc.myFramework.AInterface;
+import rpc.myFramework.BInterface;
+import rpc.myFramework.CInterface;
+import rpc.myFramework.RpcClient;
 
 public class TestRpcClient {
 

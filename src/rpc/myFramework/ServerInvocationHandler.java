@@ -1,10 +1,11 @@
-package rpc.example;
+package rpc.myFramework;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class ServerInvocationHandler implements InvocationHandler {
@@ -23,12 +24,11 @@ public class ServerInvocationHandler implements InvocationHandler {
 				new RegisterInvocationHandler(RegisterCenter.registerCenterHost, RegisterCenter.registerCenterPort));
 		RegisterMsg registerMsg = registerCenterInterface.getRegisterMsg(interfaceClass);
 		if (registerMsg != null) {
-			Socket socket = new Socket(registerMsg.getHost(), registerMsg.getPort());
-			ObjectOutputStream output = null;
-			ObjectInputStream input = null;
+			Socket socket = new Socket();
 			try {
-				output = new ObjectOutputStream(socket.getOutputStream());
-				input = new ObjectInputStream(socket.getInputStream());
+				socket.connect(new InetSocketAddress(registerMsg.getHost(), registerMsg.getPort()));
+				ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+				ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 				output.writeObject(interfaceClass);
 				output.writeObject(method.getName());
 				output.writeObject(method.getParameterTypes());
@@ -39,9 +39,7 @@ public class ServerInvocationHandler implements InvocationHandler {
 				}
 				return result;
 			} finally {
-				if (socket != null) {
-					socket.close();
-				}
+				socket.close();
 			}
 		} else {
 			throw new ClassNotFoundException(interfaceClass + " is not register");

@@ -1,4 +1,4 @@
-package rpc.example;
+package rpc.myFramework;
 
 public class B implements BInterface {
 

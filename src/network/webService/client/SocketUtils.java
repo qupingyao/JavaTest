@@ -3,6 +3,7 @@ package network.webService.client;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.URL;
 import org.apache.commons.lang3.StringUtils;
@@ -12,24 +13,20 @@ public class SocketUtils {
 	private static final String chunkedModeStr = "Transfer-encoding: chunked";
 
 	public static String doSocket(String reqUrl, String content, String charset) {
-		Socket socket = null;
+		Socket socket = new Socket();
 		String finalResult = new String();
-		InputStream input = null;
-		OutputStream output = null;
-		ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+		ByteArrayOutputStream byteArrOut = new ByteArrayOutputStream();
 		try {
 			URL url = new URL(reqUrl);
-			socket = new Socket(url.getHost(), url.getPort());
-			output = socket.getOutputStream();
-			input = socket.getInputStream();
+			socket.connect(new InetSocketAddress(url.getHost(), url.getPort()));
+			OutputStream output = socket.getOutputStream();
+			InputStream input = socket.getInputStream();
 			output.write(content.getBytes(charset));
-			output.flush();
-			byte[] byteArr = new byte[4096];
 			int n;
-			while ((n = input.read(byteArr)) != -1) {
-				byteArrayOutputStream.write(byteArr, 0, n);
+			while ((n = input.read()) != -1) {
+				byteArrOut.write(n);
 			}
-			String originalResult = byteArrayOutputStream.toString(charset);
+			String originalResult = byteArrOut.toString(charset);
 			System.out.println("original http request content:\r\n" + originalResult);
 			if (!StringUtils.isEmpty(originalResult) && originalResult.contains(chunkedModeStr)) {
 				finalResult = HttpChunkedDataUtils.decode(originalResult, charset);
@@ -39,19 +36,15 @@ public class SocketUtils {
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (byteArrayOutputStream != null) {
-				try {
-					byteArrayOutputStream.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			try {
+				byteArrOut.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (socket != null) {
-				try {
-					socket.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			try {
+				socket.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 		}
 		return finalResult;

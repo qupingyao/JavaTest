@@ -1,9 +1,10 @@
-package rpc.example;
+package rpc.myFramework;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 public class RegisterInvocationHandler implements InvocationHandler {
@@ -20,12 +21,11 @@ public class RegisterInvocationHandler implements InvocationHandler {
 
 	@Override
 	public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-		Socket socket = new Socket(host, port);
-		ObjectInputStream input = null;
-		ObjectOutputStream output = null;
+		Socket socket = new Socket();
 		try {
-			output = new ObjectOutputStream(socket.getOutputStream());
-			input = new ObjectInputStream(socket.getInputStream());
+			socket.connect(new InetSocketAddress(host, port));
+			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+			ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 			output.writeObject(method.getName());
 			output.writeObject(method.getParameterTypes());
 			output.writeObject(args);
@@ -35,9 +35,7 @@ public class RegisterInvocationHandler implements InvocationHandler {
 			}
 			return result;
 		} finally {
-			if (socket != null) {
-				socket.close();
-			}
+			socket.close();
 		}
 	}
 

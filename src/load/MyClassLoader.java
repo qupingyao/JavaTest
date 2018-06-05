@@ -1,6 +1,5 @@
 package load;
 
-import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -37,31 +36,26 @@ public class MyClassLoader extends ClassLoader {
 
 	private byte[] getClassBytes(File file) {
 		byte[] byteArr = null;
-		InputStream in = null;
-		InputStream brIn = null;
-		ByteArrayOutputStream byteArrOut = null;
+		InputStream input = null;
+		ByteArrayOutputStream byteArrOut = new ByteArrayOutputStream();
 		try {
 			int n = 0;
-			in = new FileInputStream(file);
-			brIn = new BufferedInputStream(in);
-			byteArrOut = new ByteArrayOutputStream();
-			while ((n = brIn.read()) != -1) {
+			input = new FileInputStream(file);
+			while ((n = input.read()) != -1) {
 				byteArrOut.write(n);
 			}
 			byteArr = byteArrOut.toByteArray();
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			if (brIn != null) {
-				try {
-					brIn.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+			try {
+				byteArrOut.close();
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			if (byteArrOut != null) {
+			if (input != null) {
 				try {
-					byteArrOut.close();
+					input.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

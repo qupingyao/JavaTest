@@ -1,12 +1,12 @@
-package rpc.example;
+package rpc.myFramework;
 
-import rpc.example.A;
-import rpc.example.AInterface;
-import rpc.example.B;
-import rpc.example.BInterface;
-import rpc.example.C;
-import rpc.example.CInterface;
-import rpc.example.RpcServer;
+import rpc.myFramework.A;
+import rpc.myFramework.AInterface;
+import rpc.myFramework.B;
+import rpc.myFramework.BInterface;
+import rpc.myFramework.C;
+import rpc.myFramework.CInterface;
+import rpc.myFramework.RpcServer;
 
 public class TestRpcServer {
 

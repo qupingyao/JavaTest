@@ -1,4 +1,4 @@
-package rpc.example;
+package rpc.myFramework;
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -37,11 +37,9 @@ public class RpcServer {
 							new Thread(new Runnable() {
 								@Override
 								public void run() {
-									ObjectInputStream input = null;
-									ObjectOutputStream output = null;
 									try {
-										input = new ObjectInputStream(socket.getInputStream());
-										output = new ObjectOutputStream(socket.getOutputStream());
+										ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+										ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 										Class interfaceClass = (Class) input.readObject();
 										String methodName = (String) input.readObject();
 										Class<?>[] methodParameterTypes = (Class<?>[]) input.readObject();
@@ -60,12 +58,10 @@ public class RpcServer {
 									} catch (Exception e) {
 										e.printStackTrace();
 									} finally {
-										if (socket != null) {
-											try {
-												socket.close();
-											} catch (Exception e) {
-												e.printStackTrace();
-											}
+										try {
+											socket.close();
+										} catch (Exception e) {
+											e.printStackTrace();
 										}
 									}
 								}
@@ -74,12 +70,12 @@ public class RpcServer {
 					} catch (Exception e) {
 						e.printStackTrace();
 					} finally {
-						try {
-							if (server != null) {
+						if (server != null) {
+							try {
 								server.close();
+							} catch (Exception e) {
+								e.printStackTrace();
 							}
-						} catch (Exception e) {
-							e.printStackTrace();
 						}
 					}
 				}

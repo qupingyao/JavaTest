@@ -1,0 +1,13 @@
+mysql常见的两种存储引擎:
+	1):myIsam引擎
+		1):myIsam引擎的索引文件和数据文件是分离的，索引结构采用b+树，叶子节点的数据域存储实际数据记录的地址，主键索引和辅助索引(secondary index)在结构上没有任何区别，如图myIsamPrimaryStore.png和myIsamSecondaryStore.png
+		2):myIsam数据库表可以没有主键
+		3):myIsam引擎不支持事务
+		4):myIsam引擎采用表级锁，(表共享读锁+表独占写锁)
+		5):myIsam引擎由于数据文件内数据是连续存储的，纯查询效率会比innoDB引擎高，但是由于不支持事务而且写操作会锁表，使用局限性较大，mysql默认采用innoDB引擎	
+	2):innoDB引擎	
+		1):innoDB引擎的数据文件就是主键索引文件，索引结构采用b+树，辅助索引的b+树叶子节点的数据域存储实际数据记录的主键，如图innoDBPrimaryStore.png和innoDBSecondaryStore.png
+		2):innoDB数据库表必须有主键，如果没有显式指定，mysql会自动选择一个可以唯一标识数据记录的列作为主键，如果不存在这种列，mysql会自动生成一个隐含字段作为主键
+		3):innoDB引擎因为所有辅助索引都引用主键索引，过长的主键会使所有的辅助索引文件过大，因此建议主键不要太长
+		4):innoDB引擎支持事务
+		5):myIsam引擎采用行级锁，(行共享读锁+行独占写锁)

@@ -1,4 +1,4 @@
-package rpc.example;
+package rpc.myFramework;
 
 import java.lang.reflect.Proxy;
 
