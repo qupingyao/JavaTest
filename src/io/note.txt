@@ -1,0 +1,68 @@
+java 
+
+	 InputStream(字节输入流,抽象类)继承类：
+		1:FileInputStream
+	 	2:ByteArrayInputStream
+	 	3:ObjectInputStream
+	 	4:FilterInputStream继承类：
+	 			1:DataInputStream
+	 			2:BufferedInputStream
+	 	5:StringBufferInputStream（已过时）
+	
+	  Reader(字符输入流,抽象类)；
+	    1:InputStreamReader继承类；
+	    		1:FileReader
+	    	
+	    2:BufferedReader
+	    3:CharArrayReader
+	    4:
+	    5:
+					/	
+				   /	
+				  /	
+				 /	
+				/
+			   /
+	  InputStreamReader(输入字符流)
+	
+	
+						OutputStream(输出字节流)
+				
+	FileOutputStream ByteArrayOutputStream ObjectOutputStream StreamBufferOutputStream	
+
+
+
+14 12
+a   b  c  d  e f
+10 11 12 13 14 15	
+int(0~255)   byte(-128~127)  实际存储字节
+255           -1      		11111111  
+254      	  -2      		11111110  
+253      	  -3      		11111101  
+252      	  -4      		11111100  
+251      	  -5      		11111011  
+246      	  -10     		11110110  
+236      	  -20     		11101100  
+226      	  -30     		11100010  
+216      	  -40     		11011000  
+206      	  -50     		11001110  
+196      	  -60     		11000100  
+186      	  -70     		10111010  
+156      	  -100    		10011100  
+129      	  -127    		10000001  
+128      	  -128    		10000000  
+127      	  127     		01111111  
+100      	  100     		01100100 
+70       	  70      		01000110  
+60       	  60      		00111100  
+50       	  50      		00110010  
+40       	  40      		00101000  
+30       	  30      		00011110  
+20       	  20      		00010100  
+10       	  10      		00001010  
+5        	  5       		00000101  
+4        	  4       		00000100  
+3        	  3       		00000011  
+2        	  2       		00000010  
+1        	  1       		00000001  
+0        	  0       		00000000  

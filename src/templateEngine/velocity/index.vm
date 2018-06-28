@@ -1,0 +1,6 @@
+this is home page
+#set($str = 'hello')
+$str $name 
+#foreach($word in $list)
+$word
+#end

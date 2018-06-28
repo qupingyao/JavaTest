@@ -13,6 +13,8 @@ public class Consumer implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println(name +" start");
 		depot.consume(name);
+		System.out.println(name +" end");
 	}
 }

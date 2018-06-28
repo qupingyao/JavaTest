@@ -34,16 +34,14 @@ public class ClhLock {
 		Node pred = tail.getAndSet(node);
 		preNode.set(pred);
 		while (pred.isLock) {
-//			System.out.println("do");
 		}
+		//加锁时自旋在前继节点(其他线程上)
 	}
 
 	public void unlock() {
 		Node node = currentNode.get();
 		node.isLock = false;
-//		currentNode.set(preNode.get());
-//		currentNode.set(currentNode.get());
-		currentNode.set(null);
+		currentNode.set(preNode.get());
 	}
 
 	private static class Node {
@@ -55,7 +53,7 @@ public class ClhLock {
 		Thread t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for(int i=0;i<500;i++){
+				for(int i=0;i<100000000;i++){
 					lock.lock();
 					num++;
 					lock.unlock();
@@ -65,13 +63,14 @@ public class ClhLock {
 		Thread t2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for(int i=0;i<500;i++){
+				for(int i=0;i<100000000;i++){
 					lock.lock();
 					num++;
 					lock.unlock();
 				}
 			}
 		});
+		long sTime = System.currentTimeMillis();
 		t1.start();
 		t2.start();
 		try {
@@ -80,6 +79,8 @@ public class ClhLock {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
+		long eTime = System.currentTimeMillis();
 		System.out.println(num);
+		System.out.println(eTime-sTime);
 	}
 }

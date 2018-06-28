@@ -29,10 +29,10 @@ public class Test {
 					Socket socket = new Socket();
 					try {
 						socket.connect(new InetSocketAddress(serverHost, serverPort));
-						InputStream inputStream = socket.getInputStream();
+						InputStream input = socket.getInputStream();
 						while (true) {
 							readByteTimes++;
-							System.out.println("client get byte(int value):" + inputStream.read() + ", time:"
+							System.out.println("client get byte(int value):" + input.read() + ", time:"
 									+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 							try {
 								Thread.sleep(1000);

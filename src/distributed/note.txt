@@ -1,0 +1,11 @@
+角色Proposer，Acceptor
+
+1.不能只有一个Acceptor，不然这个Acceptor宕机就不具备可用性了
+2.有多个Acceptor，每个Acceptor必须接受第一个提案，且必须能接受多个提案。如果每个Acceptor只能接受第一个提案，很有可能没有一个提案被大多数Acceptor接受
+	定义一个提案(number,value)
+	如果一个提案(n,v)被大多数Acceptor接受了，则认为这个提案被通过
+3.因为每个Acceptor能接受多个提案，所以会有多个提案被通过，所有通过的提案value必须相同
+4.在3的基础上追求更强的条件，如果一个提案(n,v)被通过，那么所有编号>n且被任意Acceptor接受的提议value也必须是v
+5.在4的基础上追求更强的条件，如果一个提案(n,v)被提出，必须存在一个大多数Acceptor集合S满足两个条件之一
+	1.S中没有一个Acceptor接收过编号<n的提案
+	2.S中所有Acceptor接收过编号<n的提案中，编号最大的提案值为v

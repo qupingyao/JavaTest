@@ -6,4 +6,7 @@ socket输入输出流一些细节:
 	4):当读缓冲区为空时，对应socket实例的输入流会堵塞
 	5):socket实例的输入流调用read()时要么堵塞，要么返回一个字节对应的int值，要么返回-1示意读到了末尾，这种读到末尾的情况发生在另一端的socket实例关闭或者另一端的socket实例关闭了输出流的情况
 	6):socket实例关闭后另一端的socket实例的输出流在写数据时就会异常，但是输入流依旧能继续工作
+	7):socket编程使用ObjectOutputStream时，由于ObjectOutputStream自身的机制，在调用ObjectOutputStream(OutputStream)构造器时，会在依赖的输出流内写入认证数据
+	   socket编程使用ObjectInputStream时，由于ObjectInputStream自身的机制，在调用ObjectInputStream(InputStream)构造器时，会从依赖的输入流内读入认证数据，如果读不到则堵塞
+	         因为ObjectInputStream(InputStream)构造器的堵塞机制，在socket编程时服务端和客户单不能同时先调用ObjectInputStream(InputStream)构造器，后调用ObjectOutputStream(OutputStream)构造器，否则会因为同时堵塞而死锁
 

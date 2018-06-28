@@ -30,10 +30,10 @@ public class Test {
 					Socket socket = new Socket();
 					try {
 						socket.connect(new InetSocketAddress(serverHost, serverPort));
-						OutputStream ouputStream = socket.getOutputStream();
+						OutputStream ouput = socket.getOutputStream();
 						while (true) {
 							preWriteTimes++;
-							ouputStream.write(clientData.getBytes(Constant.defaultCharset));
+							ouput.write(clientData.getBytes(Constant.defaultCharset));
 							System.out.println("client write byte time:"
 									+ new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
 							try {

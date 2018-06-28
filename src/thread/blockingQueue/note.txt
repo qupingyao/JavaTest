@@ -1,32 +1,198 @@
 阻塞队列:
-一个支持两个附加操作的队列。
-两个附加操作：  1.在队列为空时，获取元素的线程会等待队列变为非空。
-		  2.当队列满时，存储元素的线程会等待队列可用。
+	对于同一操作有多种不同的执行逻辑
 
-		 抛出异常	            返回特殊值	       一直阻塞	          超时退出
-插入方法	add(e)	    offer(e)  put(e)   offer(e,time,unit)
-移除方法	remove()	poll()	  take()   poll(time,unit)
-检查方法	element()	peek()	      不可用	         不可用
+		            抛出异常	            返回特殊值	       阻塞	          退出
+队尾添加元素	add(e)	    offer(e)  put(e)   offer(e,time,unit)
+队头删除元素	remove()	poll()	  take()   poll(time,unit)
+查看队头元素	element()	peek()	      无	                     无
+对于阻塞队列来说查看队头元素，获取队列元素个数，保证入队出队的公平性都是没有什么意义的操作
 
-抛出异常：是指当阻塞队列满时候，再往队列里插入元素，会抛出IllegalStateException(“Queue full”)异常。当队列为空时，从队列里获取元素时会抛出NoSuchElementException异常 。
-返回特殊值：插入方法会返回是否成功，成功则返回true。移除方法，则是从队列里拿出一个元素，如果没有则返回null
-一直阻塞：当阻塞队列满时，如果生产者线程往队列里put元素，队列会一直阻塞生产者线程，直到拿到数据，或者响应中断退出。当队列空时，消费者线程试图从队列里take元素，队列也会阻塞消费者线程，直到队列可用。
-超时退出：当阻塞队列满时，队列会阻塞生产者线程一段时间，如果超过一定的时间，生产者线程就会退出。
+抛出异常     1):当阻塞队列为满时，往队列里插入元素，会抛出IllegalStateException()异常
+	   2):当阻塞队列为空时，从队列里获取元素，会抛出NoSuchElementException异常
+返回特殊值 1):当阻塞队列为满时，往队列里插入元素，会返回false
+ 	   2):当阻塞队列为空时，从队列里获取元素，会返回null(堵塞队列的所有元素都不能为空)
+阻塞             1):当阻塞队列为满时，往队列里插入元素，会一直阻塞当前线程，直到能插入元素或响应中断
+	   2):当堵塞队列为空时，从队列里获取元素，会一直阻塞当前线程，直到能获取元素或响应中断
+超时             1):当阻塞队列为满时，往队列里插入元素，会一直阻塞当前线程，直到能插入元素或响应中断或堵塞至少超过指定时间(不保证堵塞时间一超过指定时间马上退出)
+	   2):当阻塞队列为满时，从队列里获取元素，会一直阻塞当前线程，直到能获取元素或响应中断或堵塞至少超过指定时间(不保证堵塞时间一超过指定时间马上退出)
 
-几种阻塞队列：
-ArrayBlockingQueue
-ArrayBlockingQueue是一个用数组实现的有界阻塞队列。此队列按照先进先出（FIFO）的原则对元素进行排序。默认情况下不保证访问者公平的访问队列，所谓公平访问队列是指阻塞的所有生产者线程或消费者线程，当队列可用时，可以按照阻塞的先后顺序访问队列，即先阻塞的生产者线程，可以先往队列里插入元素，先阻塞的消费者线程，可以先从队列里获取元素。通常情况下为了保证公平性会降低吞吐量。
+几种阻塞队列:
+	1.ArrayBlockingQueue
+		一个底层用循环数组实现的阻塞队列，用两个下标标记入队位置和出队位置，用单锁两条件(非空和非满)来控制入队出队(同一时间入队和出队争用一把锁)，可指定队列的公平性(虽然没什么用)，必须指定队列容量，堵塞队列初始化时就会为底层数组分配队列容量大小的空间，并发控制用reentrantLock实现
 
-LinkedBlockingQueue
-LinkedBlockingQueue是一个用链表实现的有界阻塞队列。此队列的默认和最大长度为Integer.MAX_VALUE。此队列按照先进先出的原则对元素进行排序。
+	2.LinkedBlockingQueue
+		一个底层用链表实现的阻塞队列，用两个指针标记头节点(冗余头节点)和尾节点，用双锁双条件(生产锁-非满,消费锁-非空)来控制入队出队，双锁借助链表特性和冗余头节点来避免并发，不可指定队列的公平性，可以不指定队列容量，默认队列长度为(Integer.MAX_VALUE)，并发控制用reentrantLock和atomicInteger实现
+		由于reentrantLock没有提供方法获取await在某一个条件上线程的数量(应该是觉得这个方法没有意义)，在一些场景下，比如当一堆生产者线程堵塞在非满条件是时，队列元素突然整体清空，堵塞队列就不知道非满条件该notify几次，因此LinkedBlockingQueue采用如下机制：
+			1.生产者可以notify堵塞的生产者(只要队列非满)，消费者可以notify堵塞的消费者(只要队列非空)，一个唤醒一个(级联通知)，这样可以防止在上述场景下大量的无用notify
+			2.光有机制1还不行，消费者也必须要在队列满的时候notify堵塞的生产者一次，生产者也必须要在队列空的时候notify堵塞的消费者一次
+			以上两机制保证整体上性能的最优，此外，所有的入队出队操作都先判断count(队列元素个数)大小，实际操作时先改变链表结构再改变count值，这样等价于在改变count值时入队出队操作才算实际生效，加上入队线程和出队线程的唯一性，这种策略变相保证了入队出队操作和count变化两个复合操作的原子性
+			具体实现:
+			public void put(E e) throws InterruptedException {
+		        if (e == null) throw new NullPointerException();
+		        int c = -1;
+		        Node<E> node = new Node<E>(e);
+		        final ReentrantLock putLock = this.putLock;
+		        final AtomicInteger count = this.count;
+		        putLock.lockInterruptibly();
+		        try {
+		            while (count.get() == capacity) {
+		                notFull.await();
+		            }
+		            enqueue(node);/**元素入队**/
+		            c = count.getAndIncrement();
+		            if (c + 1 < capacity)
+		                notFull.signal();
+		        } finally {
+		            putLock.unlock();
+		        }
+		        if (c == 0)
+		            signalNotEmpty();
+		    }
+		    
+		    public E take() throws InterruptedException {
+		        E x;
+		        int c = -1;
+		        final AtomicInteger count = this.count;
+		        final ReentrantLock takeLock = this.takeLock;
+		        takeLock.lockInterruptibly();
+		        try {
+		            while (count.get() == 0) {
+		                notEmpty.await();
+		            }
+		            x = dequeue();/**元素出队**/
+		            c = count.getAndDecrement();
+		            if (c > 1)
+		                notEmpty.signal();
+		        } finally {
+		            takeLock.unlock();
+		        }
+		        if (c == capacity)
+		            signalNotFull();
+		        return x;
+		    }
+		    
+		备注 1.LinkedBlockingQueue的生产和消费并不能算是完全并行的，由上述代码可知有时生产者也需要获取消费锁，消费者也需要获取生产锁
+		   2.LinkedBlockingQueue也可按producerConsumerModel.MyLinkedBlockingingQueue的方式简单实现，无脑唤醒，但是和官方源码比效率不高
+		   3.LinkedBlockingQueue的remove()和clear()操作需要同时获取消费锁和生产锁
 
-PriorityBlockingQueue
-PriorityBlockingQueue是一个支持优先级的无界队列。默认情况下元素采取自然顺序排列，也可以通过比较器comparator来指定元素的排序规则。元素按照升序排列。
+	3.PriorityBlockingQueue
+		一个底层用数组（最小堆）实现的单边无界阻塞队列（所谓单边无界是指生产者放入元素不会堵塞，消费者消费元素会堵塞），底层数组有个初始容量（系统默认或用户设置，队列对象初始化时分配），容量不够时会动态扩容，达到系统规定最大容量时抛出OutOfMemoryError,并发控制用reentrantLock和cas锁实现
+		为了实现优先级比较，要么元素实现Comparable接口要么队列对象初始化时传入Comparator比较器对象
+		用单锁一条件(非空)来控制入队出队(同一时间入队和出队争用一把锁)，不可指定队列的公平性
+		备注 1.由于生产者放入元素不会堵塞，put(e)和offer(e,time,unit)底层都是offer(e)
+		   2.为了减少队列扩容对队列生产消费性能的影响，生产者在放入元素时，会先请求获取队列锁，获取到队列锁后循环判断队列是否需要扩容，如果需要扩容，当前线程会先放开队列锁，改去争用一把扩容锁（简单的cas0-1锁），
+		   	  如果争用成功则按照队列的旧容量计算新容量，按新容量分配新空间，再释放扩容锁，之后，无论当初争用扩容锁成功还是失败当前线程都会再去争用队列锁，获取到队列锁后,在保证队列还没被扩容且当前线程刚刚分配过新空间则用新空间实现真正扩容（数组拷贝）
+		   	  具体实现:
+		   	 public boolean offer(E e) {
+		        if (e == null)
+		            throw new NullPointerException();
+		        final ReentrantLock lock = this.lock;
+		        lock.lock();
+		        int n, cap;
+		        Object[] array;
+		        while ((n = size) >= (cap = (array = queue).length))/**循环判断是否需要扩容**/
+		            tryGrow(array, cap);/**尝试扩容**/
+		        try {/**扩容完成，走正常生产者逻辑**/
+		            Comparator<? super E> cmp = comparator;
+		            if (cmp == null)
+		                siftUpComparable(n, e, array);
+		            else
+		                siftUpUsingComparator(n, e, array, cmp);
+		            size = n + 1;
+		            notEmpty.signal();
+		        } finally {
+		            lock.unlock();
+		        }
+		        return true;
+    		}
+    		
+    		private void tryGrow(Object[] array, int oldCap) {
+		        lock.unlock();/**先放开队列锁**/
+		        Object[] newArray = null;
+		        if (allocationSpinLock == 0 &&
+		            UNSAFE.compareAndSwapInt(this, allocationSpinLockOffset,
+		                                     0, 1)) {/**争用扩容锁(cas0-1锁)**/
+		            try {
+		                int newCap = oldCap + ((oldCap < 64) ?
+		                                       (oldCap + 2) : 
+		                                       (oldCap >> 1));
+		                if (newCap - MAX_ARRAY_SIZE > 0) {    
+		                    int minCap = oldCap + 1;
+		                    if (minCap < 0 || minCap > MAX_ARRAY_SIZE)
+		                        throw new OutOfMemoryError();
+		                    newCap = MAX_ARRAY_SIZE;
+		                }
+		                if (newCap > oldCap && queue == array)
+		                    newArray = new Object[newCap];
+		            } finally {
+		                allocationSpinLock = 0;/**释放扩容锁(cas0-1锁)**/
+		            }
+		        }
+		        if (newArray == null) /**短暂释放cpu，让其他线程先扩容，当前线程占着也没卵用**/
+		            Thread.yield();
+		        lock.lock();/**争用队列锁**/
+		        if (newArray != null && queue == array) {/**如果队列还没被扩容且当前线程刚才分配过新空间则数组拷贝实现真正扩容**/
+		            queue = newArray;
+		            System.arraycopy(array, 0, newArray, 0, oldCap);
+		        }
+		    }
+		    
+		    3.PriorityBlockingQueue扩容算法:int newCap = oldCap + ((oldCap < 64) (oldCap + 2) : (oldCap >> 1))，最大容量为Integer.MAX_VALUE - 8，超出抛出内存溢出异常
+		   	4.因为PriorityBlockingQueue的扩容进行了额外的锁优化，因此PriorityBlockingQueue自己用数组实现了一遍最小堆，没有用系统自带的PriorityQueue
+	
+	4.DelayQueue
+		一个底层用PriorityQueue（数组）实现的单边无界阻塞队列（所谓单边无界是指生产者放入元素不会堵塞，消费者消费元素会堵塞），底层数据结构和初始化、扩容机制都以PriorityQueue的实现说了算，达到系统规定最大容量时抛出OutOfMemoryError,并发控制用reentrantLock锁实现
+		为了实现延时和优先级比较，元素必须实现Delayed接口，该接口有两个方法long getDelay(TimeUnit unit)和int compareTo(DelayQueue o)
+		第一个方法在DelayQueue实现上只会是头元素调用，用来确定头元素需要多久才允许出队
+		第二个方法是为了适配底层PriorityQueue实现逻辑而设的
+		注意：两个方法的逻辑没有任何直接关系，延时只对头元素有效
+		用单锁一条件(非空)来控制入队出队(同一时间入队和出队争用一把锁)，不可指定队列的公平性
+		常见应用场景：
+			1):缓存系统的设计：用DelayQueue保存缓存元素的key和有效期，用一个线程循环查询DelayQueue，一旦能从DelayQueue中获取到元素，表示缓存失效了
+			2):定时任务调度：    用DelayQueue保存当天将会执行的任务和执行时间，用一个线程循环查询DelayQueue，一旦能从DelayQueue中获取到任务就开始执行
+		备注 1.由于生产者放入元素不会堵塞，put(e)和offer(e,time,unit)底层都是offer(e)
 
-DelayQueue
-DelayQueue是一个支持延时获取元素的无界阻塞队列。队列使用PriorityQueue来实现。队列中的元素必须实现Delayed接口，在创建元素时可以指定多久才能从队列中获取当前元素。只有在延迟期满时才能从队列中提取元素。我们可以将DelayQueue运用在以下应用场景：
-我们可以将DelayQueue运用在以下应用场景：
-1.缓存系统的设计：可以用DelayQueue保存缓存元素的有效期，使用一个线程循环查询DelayQueue，一旦能从DelayQueue中获取元素时，表示缓存有效期到了。
-2.定时任务调度。使用DelayQueue保存当天将会执行的任务和执行时间，一旦从DelayQueue中获取到任务就开始执行，从比如TimerQueue就是使用DelayQueue实现的。
 
-阻塞队列详解： http://ifeve.com/java-blocking-queue/
+						   有界/无界           存储结构        					单锁/双锁       条件
+ArrayBlockingQueue       有界                      数组                					单锁                   2条件
+LinkedBlockingQueue		   有界                      链表                					双锁		 2条件
+PriorityBlockingQueue    无界		         数组(最小堆)					单锁                   1条件
+DelayQueue				   无界	                     数组(PriorityBlockingQueue)
+SynchronousQueue
+LinkedTransferQueue      有界                      双向链表                                                           单锁                   1条件
+LinkedBlockingDeque
+
+
+https://www.cnblogs.com/zaizhoumo/p/7786793.html
+
+http://www.iteye.com/problems/87918
+
+
+
+
+
+
+
+DelayQueue http://www.cnblogs.com/sunzhenchao/p/3515085.html
+
+
+在分析完LinkedBlockingQueue的源码之后，再看LinkedBlockingDeque源码之前，我在想LinkedBlockingDeque可能是如何实现的？ 
+我的想法是两把锁+四个条件，两把锁中，一把管理队头，一把管理队尾，每把锁两个条件，分别是notEmpty和notFull，这样的话，就可以同时有两个线程可以同时在队列两端执行入队和出队操作，为了实现同步，借助于一个AtomicInteger的count变量保存LinkeBlockingDeque中元素的个数。 
+但是Java的源码中，并不是像我这样的思路，而是使用一把锁+两个条件，这种实现方式是和ArrayBlockingQueue一样的。然后我就在想，上面的想法是否可以实现？ 
+细想了一下，我的这种想法是不可行的，不然Java也有可能采取这种方式了。 
+举个例子：现在线程A假设调用putFirst()，不过队列容量满了，所以线程A就阻塞了，这是一个线程B调用了putLast()，同样由于队列容量满了，线程B也阻塞了，这时一个线程C调用了takeLast()取走了一个元素，那么该线程就可以通知尾部的锁上的notFull，这样线程B就可以释放调用putLast了，而如果想要释放线程A，只有两个方法： 
+1. 就是线程C在调用takeLast()方法中取走一个数据时，也通知头部锁上的notFull，这也就得意味着takeLast也得占有头部锁，即占有头和尾两把锁 
+2. 如果takeLast()只占有一把尾部锁的话，那么想要释放线程A的话，就只能希望有一个线程D调用takeFirst()取走一个头元素时通知头锁的notFull条件释放线程A
+
+如果使用第一种方式，那么其实和使用一把锁是相同的，因为不管是队头还是队尾的入队和出队，都得先获取两把锁，最后释放两把锁，这样的实现方式是可以的；但是如果采用第二种方式，那么就会有问题，比如说： 
+现在队列容量还有最后一个元素可以插入，这时线程A执行putFirst()方法，线程B执行putLast()方法，当两个线程进入while循环处判断AtomicInteger的值的时候，都通过了，那么线程A会调用linkFirst将节点插入到前端，然后将count+1，线程B会调用linkLast将节点插入到尾部，然后将count+1,这时由于两个线程各插入了一个元素，那么该队列中的元素就超过了容量了，所以说第二种方式是不可行的。归根到底是因为可能存在两个线程同时对AtomicInteger做一个方向的操作，比如说都+1，都-1，而LinkedBlockingQueue可行是因为虽然会有两个线程对AtomicInteger操作，但是方向是相反的，一个+1，一个-1。 
+而第一种方式其实和使用一把锁是相同的，所以Java源码采用了一把锁+两个条件的方式。
+
+
+ArrayBlockingQueue和LinkedBlockingQueue的比较:
+	从本质上讲，两者的比较是时间和空间的比较
+	ArrayBlockingQueue不具备可伸缩性，初始占用空间大，但是出队入队不需要额外的构造销毁节点(GC)，效率高
+	LinkedBlockingQueue具备伸缩性，初始占用空间小，但是出队入队需要额外的构造销毁节点(GC)，效率低
+	由于两种堵塞队列主要用于生产和消费业务的解耦，对效率的需要一般更低，但对可伸缩性要求高（系统可以容忍一时的大空间占用，但不能忍受持久的大空间占用），而且ArrayBlockingQueue由于不敢设置太大的初始容量，这个限制自身就会降低效率（容量的大小往往比出队入队速度更影响效率（堵塞队列用于限流，往往消费速率低于生产速率，队列容易满）），因此一般而言LinkedBlockingQueue更有前景
+	为了弥补LinkedBlockingQueue出队入队的额外消耗，设计者对LinkedBlockingQueue使用了双锁，这种设计弥补了双边并发（生产者并发和消费者并发）的效率，但是对单边并发（生产者并发或消费者并发）无用
+	ArrayBlockingQueue本质上也可以用类似LinkedBlockingQueue借助冗余头节点的方式实现双锁，但由于队列自身适用场景不多（ArrayBlockingQueue适用于低容量，高出队入队数的场景，条件极为苛刻，大多情况下LinkedBlockingQueue是更好的选择），而且冗余节点更符合链表的设计而不是数组，实现上会降低代码可读性，因此ArrayBlockingQueue只实现了单锁

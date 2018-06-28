@@ -1,0 +1,26 @@
+基础建表语句:
+	CREATE TABLE employee (
+	  id int(11) unsigned NOT NULL AUTO_INCREMENT COMMENT '主键',
+	  name varchar(100) DEFAULT NULL COMMENT '姓名',
+	  userCode varchar(100) DEFAULT NULL COMMENT '员工编码',
+	  age int(11) DEFAULT NULL COMMENT '年龄',
+	  creationTime datetime DEFAULT NULL COMMENT '创建时间',
+	  updateTime datetime DEFAULT NULL COMMENT '更新时间',
+	  yn int(11) DEFAULT NULL COMMENT '有效标识',
+	  PRIMARY KEY (id)
+	) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='员工信息表';
+	
+
+执行计划explain详解(一般用于分析查询sql):
+	type参数:
+		1):const 使用了主键或者唯一索引
+		2):eq_ref
+		3):ref 使用了普通索引
+		4):ref_or_null
+		5):range 在索引列上使用范围查询
+		5):all 全表扫描
+	
+	
+	
+	
+https://blog.csdn.net/wuseyukui/article/details/71512793

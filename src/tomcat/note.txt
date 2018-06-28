@@ -1,0 +1,53 @@
+tomcat架构:
+						server(tomcat的顶层组件，全局唯一)
+						   | 
+					       | (1-*) 
+					       |  
+				        service	 
+				 	     |    \
+			             |     \(1-*)
+			   			 |      \
+	   	  				 |     connector(一个connector关联一个监听端口，关联一种网络协议,tomcat支持的主要协议有http/https/ajp)
+	                     |(1-1)
+	       --------------------------------------              
+	       |             |						|
+	       |             |						|
+	       |          engine					|
+	       |       		 | 					    |
+		   |		     | (1-*) 				|
+		   |		     |  					|container
+	       |   			host				    |
+	       |             |						|
+		   |		     | (1-*) 				|
+		   |		     | 						|
+	  	   |		   context(表示一个web项目)	  	|
+		   |  			 |						|
+		   | 			 |(1-*)					|
+		   |		 	 |						|
+		   |	 	   warp(管理具体的servlet)		|
+		   --------------------------------------  	
+		   
+		   
+tomcat总体执行流程:		   
+	1:当tomcat接收到一个请求时，根据请求的协议类型和端口号能找到一个对应的connector和container，之后tomcat把请求扔给对应的connector
+	2:connector接收到请求后将请求封装为request和response对象，再交由container进行处理，container处理完成之后再将response对象还给connector
+	3:connector将response对象解析为具体的报文再借助socket返回给客户端
+	
+	
+connector实现原理:
+	内部使用protocolHandler来处理请求的，不同的网络协议、io模式有不同的protocolHandler类
+	protocolHandler包含了三个部件:
+		1):Endpoint->处理底层socket的网络连接
+		2):Processor->将Endpoint接收到的报文封装为request和response对象
+		3):Adapter->将Processor封装的request和response对象交给container处理
+
+Connector用于处理连接相关的事情，并提供Socket与Request和Response相关的转化
+Container用于封装和管理Servlet，以及具体处理Request请求；
+
+
+一个标准的web项目结构
+	|--html,jsp,css,js文件
+	|--WEB-INF
+		|--classes目录(java项目编译后的结果)
+  		|--lib目录(jar包)
+		|--web.xml文件

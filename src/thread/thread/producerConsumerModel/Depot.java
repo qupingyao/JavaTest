@@ -1,44 +1,48 @@
 package thread.thread.producerConsumerModel;
 
 import java.util.LinkedList;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.ReentrantLock;
 
-public class Depot {
+public abstract class Depot {
 
-	private int maxNum;
+	protected int capacity;
 
-	private LinkedList<Thing> list;
+	protected AtomicInteger count = new AtomicInteger(0);
+	
+	protected LinkedList<Thing> list = new LinkedList<Thing>();
 
-	public Depot(int maxNum) {
-		this.maxNum = maxNum;
-		list = new LinkedList<Thing>();
-	}
+	protected ReentrantLock putLock = new ReentrantLock();
 
-	public synchronized void product(String productorName, Thing thing) {
-		while (list.size() >= maxNum) {
-			System.out.println("depot is full");
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		list.add(thing);
-		System.out.println(productorName + " product, thingId: " + thing.getId() + ", remain:" + list.size());
-		this.notifyAll();
-	}
+	protected ReentrantLock takeLock = new ReentrantLock();
 
-	public synchronized void consume(String consumerName) {
-		while (list.size() <= 0) {
-			System.out.println("depot is empty");
-			try {
-				this.wait();
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
-		Thing thing = list.pop();
-		System.out.println(consumerName + " consume, thingId: " + thing.getId() + ", remain: " + list.size());
-		this.notifyAll();
-	}
+	protected Condition notFull = putLock.newCondition();
+
+	protected Condition notEmpty = takeLock.newCondition();
+	
+	protected BlockingQueue<Thing> blockingQueue;
+	
+	protected MyBlockingQueue<Thing> myBlockingQueue;
+
+	public abstract void product(String productorName, Thing thing);
+	
+	public abstract void consume(String consumerName);
+	
+	public abstract void add(Thing thing);
+	
+	public abstract int getProductorNotEmptySignalCount();
+	
+	public abstract int getConsumerNotEmptySignalCount();
+	
+	public abstract int getProductorNotFullSignalCount();
+	
+	public abstract int getConsumerNotFullSignalCount();
+	
+	public abstract void clear();
+	
+	public abstract int getCount();
+	
 
 }

@@ -13,6 +13,8 @@ public class Productor implements Runnable {
 
 	@Override
 	public void run() {
+		System.out.println(name +" start");
 		depot.product(name, new Thing());
+		System.out.println(name +" end");
 	}
 }

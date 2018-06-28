@@ -3,26 +3,26 @@ package thread.SynWay;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class SimpleLook {
-	
+
 	private static int num;
-	
+
 	private AtomicBoolean state = new AtomicBoolean(false);
 
 	public void lock() {
-		while (state.getAndSet(true)) {
+		while (!state.compareAndSet(false, true)) {
 		}
 	}
 
 	public void unlock() {
 		state.set(false);
 	}
-	
+
 	public static void main(String[] args) {
 		SimpleLook lock = new SimpleLook();
 		Thread t1 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for(int i=0;i<10000;i++){
+				for (int i = 0; i < 10000; i++) {
 					lock.lock();
 					num++;
 					lock.unlock();
@@ -32,7 +32,7 @@ public class SimpleLook {
 		Thread t2 = new Thread(new Runnable() {
 			@Override
 			public void run() {
-				for(int i=0;i<10000;i++){
+				for (int i = 0; i < 10000; i++) {
 					lock.lock();
 					num++;
 					lock.unlock();
