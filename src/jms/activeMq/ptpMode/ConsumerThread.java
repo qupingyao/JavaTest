@@ -1,4 +1,4 @@
-package jms.activeMq.ptpMode;
+/*package jms.activeMq.ptpMode;
 
 public class ConsumerThread implements Runnable{
     
@@ -23,3 +23,4 @@ public class ConsumerThread implements Runnable{
         }
     }
 }
+*/

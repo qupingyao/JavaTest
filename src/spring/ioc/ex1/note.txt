@@ -1,0 +1,36 @@
+DefaultListableBeanFactory
+
+aliasMap 空
+alreadyCreated 空
+beanDefinitionMap <String,BeanDefinition>
+	{
+	a=Generic bean: class [spring.ioc.ex1.A]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in file [D:\code1\test\JavaTest\src\spring\ioc\ex1\service-bean.xml], 
+	b=Generic bean: class [spring.ioc.ex1.B]; scope=; abstract=false; lazyInit=false; autowireMode=0; dependencyCheck=0; autowireCandidate=true; primary=false; factoryBeanName=null; factoryMethodName=null; initMethodName=null; destroyMethodName=null; defined in file [D:\code1\test\JavaTest\src\spring\ioc\ex1\service-bean.xml]
+	}	
+beanDefinitionNames [aService, bService]
+containedBeanMap 空
+
+factoryBeanInstanceCache 空
+factoryBeanObjectCache 空
+
+1. 检查缓存中是否存在该单例，存在该单例并且不带任何参数，那么得到共享实例
+
+2. 不存在实例 或者带参数， 那么先查询是否存在该bean的定义。
+
+     2.1 如果在当前beanFactory里找不到定义，那么就继续向上搜索parentBeanFactory，委托给parentBeanFactory来实例化。
+
+     2.2 存在定义 or 不存在parentBeanFactory,尝试得到该beanName 的定义，没有则抛异常
+
+     2.3 得到以来RootBeanDefinition mbd，首先检查依赖，该bean是否依赖于其他的bean，然后根据依赖先初始化依赖bean
+
+     2.4 该bean定义是否为单例，是单例，那么使用单例工厂加载该单例。然后从共享实例中获得。
+
+     2.5 如果该bean定义为prototype，那么创建该prototype
+
+     2.5 如果既不是单例 也不是 prototype，根据scope来定制bean
+
+     2.6 这个时候进行最后一步，对bean进行类型检查，如果需要转型则进行转型。
+
+
+
+所以说这里大概是 主要两个过程，一个是检查缓存是否存在该bean，一个是对bean的第一次初始化。

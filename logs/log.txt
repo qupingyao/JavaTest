@@ -1,0 +1,82 @@
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Java version: 1.8.0_121
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Java vendor: Oracle Corporation
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Java class path: D:\code1\test\JavaTest\bin;D:\code1\test\JavaTest\commons-dbcp-1.4.jar;D:\code1\test\JavaTest\commons-pool-1.4.jar;D:\code1\test\JavaTest\mysql-connector-java-5.1.26.jar;D:\code1\test\JavaTest\mybatis-3.2.7.jar;D:\code1\test\JavaTest\cglib-2.2.2.jar;D:\code1\test\JavaTest\asm-3.3.1.jar;D:\code1\test\JavaTest\log4j-1.2.17.jar;D:\code1\test\JavaTest\activemq-all-5.15.2.jar;D:\code1\test\JavaTest\servlet-api-2.4.jar;D:\code1\test\JavaTest\commons-httpclient-3.1.jar
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Operating system name: Windows 7
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Operating system architecture: amd64
+2018-05-04 16:23:39%1 HttpClient.java DEBUG Operating system version: 6.1
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SUN 1.8: SUN (DSA key/parameter generation; DSA signing; SHA-1, MD5 digests; SecureRandom; X.509 certificates; JKS & DKS keystores; PKIX CertPathValidator; PKIX CertPathBuilder; LDAP, Collection CertStores, JavaPolicy Policy; JavaLoginConfig Configuration)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunRsaSign 1.8: Sun RSA signature provider
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunEC 1.8: Sun Elliptic Curve provider (EC, ECDSA, ECDH)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunJSSE 1.8: Sun JSSE provider(PKCS12, SunX509/PKIX key/trust factories, SSLv3/TLSv1/TLSv1.1/TLSv1.2)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunJCE 1.8: SunJCE Provider (implements RSA, DES, Triple DES, AES, Blowfish, ARCFOUR, RC2, PBE, Diffie-Hellman, HMAC)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunJGSS 1.8: Sun (Kerberos v5, SPNEGO)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunSASL 1.8: Sun SASL provider(implements client mechanisms for: DIGEST-MD5, GSSAPI, EXTERNAL, PLAIN, CRAM-MD5, NTLM; server mechanisms for: DIGEST-MD5, GSSAPI, CRAM-MD5, NTLM)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG XMLDSig 1.8: XMLDSig (DOM XMLSignatureFactory; DOM KeyInfoFactory; C14N 1.0, C14N 1.1, Exclusive C14N, Base64, Enveloped, XPath, XPath2, XSLT TransformServices)
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunPCSC 1.8: Sun PC/SC provider
+2018-05-04 16:23:40%1 HttpClient.java DEBUG SunMSCAPI 1.8: Sun's Microsoft Crypto API provider
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.useragent = Jakarta Commons-HttpClient/3.1
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.version = HTTP/1.1
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.connection-manager.class = class org.apache.commons.httpclient.SimpleHttpConnectionManager
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.cookie-policy = default
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.element-charset = US-ASCII
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.content-charset = ISO-8859-1
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.method.retry-handler = org.apache.commons.httpclient.DefaultHttpMethodRetryHandler@4ccabbaa
+2018-05-04 16:23:40%1 DefaultHttpParams.java DEBUG Set parameter http.dateparser.patterns = [EEE, dd MMM yyyy HH:mm:ss zzz, EEEE, dd-MMM-yy HH:mm:ss zzz, EEE MMM d HH:mm:ss yyyy, EEE, dd-MMM-yyyy HH:mm:ss z, EEE, dd-MMM-yyyy HH-mm-ss z, EEE, dd MMM yy HH:mm:ss z, EEE dd-MMM-yyyy HH:mm:ss z, EEE dd MMM yyyy HH:mm:ss z, EEE dd-MMM-yyyy HH-mm-ss z, EEE dd-MMM-yy HH:mm:ss z, EEE dd MMM yy HH:mm:ss z, EEE,dd-MMM-yy HH:mm:ss z, EEE,dd-MMM-yyyy HH:mm:ss z, EEE, dd-MM-yyyy HH:mm:ss z]
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Java version: 1.8.0_121
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Java vendor: Oracle Corporation
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Java class path: D:\code1\test\JavaTest\bin;D:\code1\test\JavaTest\commons-dbcp-1.4.jar;D:\code1\test\JavaTest\commons-pool-1.4.jar;D:\code1\test\JavaTest\mysql-connector-java-5.1.26.jar;D:\code1\test\JavaTest\mybatis-3.2.7.jar;D:\code1\test\JavaTest\cglib-2.2.2.jar;D:\code1\test\JavaTest\asm-3.3.1.jar;D:\code1\test\JavaTest\log4j-1.2.17.jar;D:\code1\test\JavaTest\activemq-all-5.15.2.jar;D:\code1\test\JavaTest\servlet-api-2.4.jar;D:\code1\test\JavaTest\commons-httpclient-3.1.jar;D:\code1\test\JavaTest\commons-codec-1.10.jar
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Operating system name: Windows 7
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Operating system architecture: amd64
+2018-05-04 16:26:37%1 HttpClient.java DEBUG Operating system version: 6.1
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SUN 1.8: SUN (DSA key/parameter generation; DSA signing; SHA-1, MD5 digests; SecureRandom; X.509 certificates; JKS & DKS keystores; PKIX CertPathValidator; PKIX CertPathBuilder; LDAP, Collection CertStores, JavaPolicy Policy; JavaLoginConfig Configuration)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunRsaSign 1.8: Sun RSA signature provider
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunEC 1.8: Sun Elliptic Curve provider (EC, ECDSA, ECDH)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunJSSE 1.8: Sun JSSE provider(PKCS12, SunX509/PKIX key/trust factories, SSLv3/TLSv1/TLSv1.1/TLSv1.2)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunJCE 1.8: SunJCE Provider (implements RSA, DES, Triple DES, AES, Blowfish, ARCFOUR, RC2, PBE, Diffie-Hellman, HMAC)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunJGSS 1.8: Sun (Kerberos v5, SPNEGO)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunSASL 1.8: Sun SASL provider(implements client mechanisms for: DIGEST-MD5, GSSAPI, EXTERNAL, PLAIN, CRAM-MD5, NTLM; server mechanisms for: DIGEST-MD5, GSSAPI, CRAM-MD5, NTLM)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG XMLDSig 1.8: XMLDSig (DOM XMLSignatureFactory; DOM KeyInfoFactory; C14N 1.0, C14N 1.1, Exclusive C14N, Base64, Enveloped, XPath, XPath2, XSLT TransformServices)
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunPCSC 1.8: Sun PC/SC provider
+2018-05-04 16:26:37%1 HttpClient.java DEBUG SunMSCAPI 1.8: Sun's Microsoft Crypto API provider
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.useragent = Jakarta Commons-HttpClient/3.1
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.version = HTTP/1.1
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.connection-manager.class = class org.apache.commons.httpclient.SimpleHttpConnectionManager
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.cookie-policy = default
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.element-charset = US-ASCII
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.protocol.content-charset = ISO-8859-1
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.method.retry-handler = org.apache.commons.httpclient.DefaultHttpMethodRetryHandler@2d38eb89
+2018-05-04 16:26:37%1 DefaultHttpParams.java DEBUG Set parameter http.dateparser.patterns = [EEE, dd MMM yyyy HH:mm:ss zzz, EEEE, dd-MMM-yy HH:mm:ss zzz, EEE MMM d HH:mm:ss yyyy, EEE, dd-MMM-yyyy HH:mm:ss z, EEE, dd-MMM-yyyy HH-mm-ss z, EEE, dd MMM yy HH:mm:ss z, EEE dd-MMM-yyyy HH:mm:ss z, EEE dd MMM yyyy HH:mm:ss z, EEE dd-MMM-yyyy HH-mm-ss z, EEE dd-MMM-yy HH:mm:ss z, EEE dd MMM yy HH:mm:ss z, EEE,dd-MMM-yy HH:mm:ss z, EEE,dd-MMM-yyyy HH:mm:ss z, EEE, dd-MM-yyyy HH:mm:ss z]
+2018-05-04 16:26:37%1 HttpConnection.java DEBUG Open connection to 127.0.0.1:8080
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "POST /webservicetest/index HTTP/1.1[\r][\n]"
+2018-05-04 16:26:37%1 HttpMethodBase.java DEBUG Adding Host request header
+2018-05-04 16:26:37%1 HttpMethodBase.java DEBUG Default charset used: ISO-8859-1
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "Content-Type: text/xml[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "User-Agent: Jakarta Commons-HttpClient/3.1[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "Host: 127.0.0.1:8080[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "Content-Length: 238[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG >> "<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:web="http://webService.network/"><soapenv:Header/><soapenv:Body><web:say><arg0><id>1</id><name>Tom</name></arg0></web:say></soapenv:Body></soapenv:Envelope>"
+2018-05-04 16:26:37%1 EntityEnclosingMethod.java DEBUG Request body sent
+2018-05-04 16:26:37%1 Wire.java DEBUG << "HTTP/1.1 200 OK[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "HTTP/1.1 200 OK[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "Date: Fri, 04 May 2018 08:26:37 GMT[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "Transfer-encoding: chunked[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "Content-type: text/xml; charset=utf-8[\r][\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r][\n]"
+2018-05-04 16:26:37%1 HttpConnection.java DEBUG Input data available
+2018-05-04 16:26:37%1 Wire.java DEBUG << "d"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "2"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "<?xml version="1.0" ?><S:Envelope xmlns:S="http://schemas.xmlsoap.org/soap/envelope/"><S:Body><ns2:sayResponse xmlns:ns2="http://webService.network/"><return>Tom</return></ns2:sayResponse></S:Body></S:Envelope>"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "0"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\n]"
+2018-05-04 16:26:37%1 Wire.java DEBUG << "[\r][\n]"
+2018-05-04 16:26:37%1 HttpMethodBase.java DEBUG Resorting to protocol version default close connection policy
+2018-05-04 16:26:37%1 HttpMethodBase.java DEBUG Should NOT close connection, using HTTP/1.1
+2018-05-04 16:26:37%1 HttpConnection.java DEBUG Releasing connection back to connection manager.

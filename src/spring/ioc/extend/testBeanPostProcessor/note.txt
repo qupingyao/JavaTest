@@ -1,0 +1,12 @@
+postProcessBeforeInitialization()将在一个bean被完全初始化前进行回调，此时对应的bean已经实例化了，但是对应的属性注入等还没有进行，即在调用InitializingBean的afterPropertiesSet()方法或bean对应的init-method之前；而方法postProcessAfterInitialization()将在bean被完全初始化后进行回调，此时对应的依赖注入已经完成，即在调用InitializingBean的afterPropertiesSet()方法或对应init-method方法之后。两个方法的参数以及返回值对应的意义都是一样的，其中参数bean表示当前状态的bean，参数beanName表示当前bean的名称，而方法对应的返回值即表示需要放入到bean容器中的bean，所以用户如果有需要完全可以在这两个方法中对bean进行修改，即封装自己的bean进行返回。
+
+
+AbstractAutowireCapableBeanFactory protected Object doCreateBean(final String beanName, final RootBeanDefinition mbd, Object args[])
+
+AbstractAutowireCapableBeanFactory protected Object initializeBean(final String beanName, final Object bean, RootBeanDefinition mbd)
+
+AbstractAutowireCapableBeanFactory public Object applyBeanPostProcessorsBeforeInitialization(Object existingBean, String beanName)
+        throws BeansException
+        
+AbstractAutowireCapableBeanFactory public Object applyBeanPostProcessorsAfterInitialization(Object existingBean, String beanName)
+        throws BeansException

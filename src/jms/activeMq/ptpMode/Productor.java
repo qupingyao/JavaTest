@@ -1,4 +1,4 @@
-package jms.activeMq.ptpMode;
+/*package jms.activeMq.ptpMode;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.MessageProducer;
@@ -55,3 +55,4 @@ public class Productor {
 		}
 	}
 }
+*/

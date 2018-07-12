@@ -13,7 +13,14 @@
 		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
 		http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
 	
-	<!--<aop:aspectj-autoproxy></aop:aspectj-autoproxy>-->
-	<import resource="service-bean.xml"></import>
+	<bean id="a" class="spring.ioc.extend.testBeanFactoryPostProcessor.A">
+		 <property name="num" value="1" />
+	</bean>
+	
+	<bean id="myBeanFactoryPostProcessor" class="spring.ioc.extend.testBeanFactoryPostProcessor.MyBeanFactoryPostProcessor">
+	</bean>
+	
+	<bean id="myBeanDefinitionRegistryPostProcessor" class="spring.ioc.extend.testBeanFactoryPostProcessor.MyBeanDefinitionRegistryPostProcessor">
+	</bean>
 
 </beans>

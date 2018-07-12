@@ -1,4 +1,4 @@
-package jms.activeMq.tempMode;
+/*package jms.activeMq.tempMode;
 
 import javax.jms.*;
 import org.apache.activemq.ActiveMQConnectionFactory;
@@ -72,3 +72,4 @@ public class SynConsumer {
 		}
 	}
 }
+*/

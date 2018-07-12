@@ -1,4 +1,4 @@
-package jms.activeMq.tempMode;
+/*package jms.activeMq.tempMode;
 
 public class TestProducer {
 
@@ -14,3 +14,4 @@ public class TestProducer {
 	}
 
 }
+*/

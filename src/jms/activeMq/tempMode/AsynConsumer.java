@@ -1,4 +1,4 @@
-package jms.activeMq.tempMode;
+/*package jms.activeMq.tempMode;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -90,4 +90,4 @@ public class AsynConsumer implements MessageListener {
 		}
 	}
 
-}
+}*/

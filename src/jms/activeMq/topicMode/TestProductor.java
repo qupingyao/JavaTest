@@ -1,4 +1,4 @@
-package jms.activeMq.topicMode;
+/*package jms.activeMq.topicMode;
 
 public class TestProductor {
 	
@@ -13,3 +13,4 @@ public class TestProductor {
     }
 
 }
+*/

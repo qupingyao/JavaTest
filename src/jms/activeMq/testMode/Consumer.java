@@ -1,4 +1,4 @@
-package jms.activeMq.testMode;
+/*package jms.activeMq.testMode;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -57,3 +57,4 @@ public class Consumer {
 		}
 	}
 }
+*/

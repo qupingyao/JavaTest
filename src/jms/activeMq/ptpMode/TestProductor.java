@@ -1,4 +1,4 @@
-package jms.activeMq.ptpMode;
+/*package jms.activeMq.ptpMode;
 
 public class TestProductor {
 	
@@ -13,3 +13,4 @@ public class TestProductor {
     }
 
 }
+*/

@@ -1,4 +1,4 @@
-package jms.activeMq.topicMode;
+/*package jms.activeMq.topicMode;
 
 public class ConsumerThread implements Runnable{
     
@@ -23,3 +23,4 @@ public class ConsumerThread implements Runnable{
         }
     }
 }
+*/

@@ -1,4 +1,4 @@
-package jms.activeMq.topicMode;
+/*package jms.activeMq.topicMode;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.MessageProducer;
@@ -56,3 +56,4 @@ public class Productor {
 		}
 	}
 }
+*/

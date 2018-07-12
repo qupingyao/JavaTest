@@ -1,0 +1,35 @@
+源码解析:
+	1.调用new FileSystemXmlApplicationContext(appConfPath);
+		执行FileSystemXmlApplicationContext的全量构造器内:FileSystemXmlApplicationContext(String configLocations[], boolean refresh, ApplicationContext parent)
+			1.1设置父容器(null)
+			1.2调用AbstractRefreshableConfigApplicationContext的setConfigLocations(String locations[])方法设置容器启动文件，内置String configLocations[]变量存储
+			1.3 如果需要刷新，走AbstractApplicationContext的refresh() 方法
+    2.调用AbstractApplicationContext的refresh()方法
+    	2.1调用AbstractApplicationContext的prepareRefresh();
+    		该方法记录容器启动时间，设置容器初始状态，在这里会往IOC容器中放入ApplicationContextAwareProcessor这个BeanPostProcessor
+    	2.2调用子类(这里是AbstractApplicationContext)的obtainFreshBeanFactory();
+    		2.2.1调用AbstractRefreshableApplicationContext的refreshBeanFactory()
+    			2.2.1.1判断AbstractRefreshableApplicationContext成员变量内beanfactory是否为空，即之前是否有创建beanfactory，有则销毁
+    			2.2.1.2创建DefaultListableBeanFactory对象，同时初始化一些对象的属性
+    			2.2.1.3调用子类(这里是AbstractXmlApplicationContext)的loadBeanDefinitions(DefaultListableBeanFactory defaultlistablebeanfactory)方法
+    				之后就开始解析配置文件，最终配置文件的的所有bean全部转化为BeanDefinition对象
+    			2.2.1.4对于每一个BeanDefinition对象，都会调用DefaultListableBeanFactory对象的registerBeanDefinition(String beanName, BeanDefinition beanDefinition)方法
+    				该方法内将传入的BeanDefinition对象做了记录，无论单例多例，都存到成员beanDefinitionMap和beanDefinitionNames中
+    				同时如果之前的单例存档内已经有该bean的单例则删除掉，销毁对象
+    	2.3用2.2返回的工厂执行void prepareBeanFactory(ConfigurableListableBeanFactory beanFactory)
+    		该方法内为容器的某些子类指定特殊的BeanPost事件处理器 
+    	2.4用2.3返回的工厂执行void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory)
+    		需要处理四种类型的bean
+    			1.非spring管理的外接的BeanFactoryPostProcessor(实现BeanDefinitionRegistryPostProcessor接口)
+    			2.非spring管理的外接的BeanFactoryPostProcessor(未实现BeanDefinitionRegistryPostProcessor接口)
+    			3.spring管理的外接的BeanFactoryPostProcessor(实现BeanDefinitionRegistryPostProcessor接口)
+    			4.spring管理的外接的BeanFactoryPostProcessor(未实现BeanDefinitionRegistryPostProcessor接口)
+    		前面两种bean需要手动继承实现新的ioc容器，手动生成bean实例，默认情况下不存在
+    		2.4.1执行1类bean的postProcessBeanDefinitionRegistry()方法
+    		2.4.2获取3类的bean(借助前面的beanDefinitionNames，并调用了AbstaractBeanFactory的doGetBean方法初始化实例)，并调用bean的postProcessBeanDefinitionRegistry()方法
+    		2.4.3执行1,2,3类bean的postProcessBeanFactory()方法
+    		2.4.4获取4类的bean的名字列表(借助前面的beanDefinitionNames)
+    		2.4.5对于2.4.4中的bean的名字列表，如果没有在2类中(2类的已经被处理过了)，调用AbstaractBeanFactory的doGetBean方法获取bean，调用bean的postProcessBeanFactory()方法
+    		
+    		
+    	

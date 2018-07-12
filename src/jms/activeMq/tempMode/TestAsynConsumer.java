@@ -1,4 +1,4 @@
-package jms.activeMq.tempMode;
+/*package jms.activeMq.tempMode;
 
 import javax.jms.JMSException;
 
@@ -16,4 +16,4 @@ public class TestAsynConsumer {
 
 	}
 
-}
+}*/

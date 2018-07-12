@@ -1,0 +1,6 @@
+在《PropertyPlaceholderConfigurer应用》提到的PropertyPlaceholderConfigurer这个类就是BeanFactoryPostProcessor接口的一个实现。它会在容器创建bean之前，将类定义中的占位符（诸如${jdbc.url}）用properties文件对应的内容进行替换。
+
+
+AbstractApplicationContext public void refresh() throws BeansException, IllegalStateException
+
+AbstractApplicationContext protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory)

@@ -1,4 +1,4 @@
-package jms.activeMq.testMode;
+/*package jms.activeMq.testMode;
 
 public class TestConsumer {
 
@@ -13,3 +13,4 @@ public class TestConsumer {
 	}
 
 }
+*/

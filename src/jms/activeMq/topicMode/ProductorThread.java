@@ -1,4 +1,4 @@
-package jms.activeMq.topicMode;
+/*package jms.activeMq.topicMode;
 
 public class ProductorThread implements Runnable {
 
@@ -17,3 +17,4 @@ public class ProductorThread implements Runnable {
 	}
 
 }
+*/

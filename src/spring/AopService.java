@@ -1,4 +1,4 @@
-package spring;
+/*package spring;
 
 import org.aspectj.lang.annotation.After;
 import org.aspectj.lang.annotation.Aspect;
@@ -24,3 +24,4 @@ public class AopService {
 	}
 
 }
+*/

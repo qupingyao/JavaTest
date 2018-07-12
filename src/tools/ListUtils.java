@@ -2,6 +2,7 @@ package tools;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class ListUtils {
@@ -34,6 +35,17 @@ public class ListUtils {
 			return r.get(NumberUtils.randomInt(0, r.size() - 1));
 		}
 		return null;
+	}
+	
+	public static <E> List<E> randomSubList(List<E> list, int size) {
+		List<E> r = new ArrayList<E>();
+		if(size>0 && list != null){
+			Collections.shuffle(list);
+			for(int i=0;i<Math.min(list.size(), size);i++){
+				r.add(list.get(i));
+			}
+		}
+		return r;
 	}
 
 	public static <E> List<E> subList(List<E> list, List<E> subList) {
